@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Complete product and integration documentation for Personality.md" />
+    <meta name="theme-color" content="#050505" />
+    <link rel="icon" href="/personality-mark.svg" type="image/svg+xml" />
+    <title>Docs · Personality.md</title>
+  </head>
+  <body class="docs-page">
+    <header class="docs-header">
+      <a class="docs-brand" href="/" aria-label="Personality.md home"><span>◇</span><b>PERSONALITY.MD</b></a>
+      <div class="docs-header-state"><i></i> DOCUMENTATION · VERIFIED 2026-10-05</div>
+      <div class="docs-header-actions">
+        <a href="/" class="docs-header-link">HOME</a>
+        <a href="/create.html" target="_blank" rel="noopener noreferrer" class="docs-create">CREATE</a>
+      </div>
+    </header>
+
+    <div class="docs-layout">
+      <aside class="docs-sidebar">
+        <div class="docs-sidebar-title">CONTENTS</div>
+        <nav aria-label="Documentation contents">
+          <a class="active" href="#overview">01 OVERVIEW</a>
+          <a href="#principles">02 PRINCIPLES</a>
+          <a href="#architecture">03 ARCHITECTURE</a>
+          <a href="#homepage">04 HOMEPAGE</a>
+          <a href="#explorer">05 EXPLORER</a>
+          <a href="#creator">06 CREATOR STUDIO</a>
+          <a href="#references">07 VISUAL REFERENCES</a>
+          <a href="#objective">08 OBJECTIVE BUILDER</a>
+          <a href="#imd">09 IMD INTEGRATION</a>
+          <a href="#validation">10 VALIDATION</a>
+          <a href="#quotes">11 QUOTES AND PAYMENT</a>
+          <a href="#attachments">12 ATTACHMENTS</a>
+          <a href="#wallet">13 WALLET</a>
+          <a href="#jobs">14 JOBS AND RESULTS</a>
+          <a href="#media">15 MEDIA INDEX</a>
+          <a href="#agents">16 AGENT MODEL</a>
+          <a href="#safety">17 SAFETY</a>
+          <a href="#privacy">18 DATA AND PRIVACY</a>
+          <a href="#accessibility">19 ACCESSIBILITY</a>
+          <a href="#api">20 LOCAL API</a>
+          <a href="#development">21 DEVELOPMENT</a>
+          <a href="#files">22 FILE MAP</a>
+          <a href="#limitations">23 LIMITATIONS</a>
+          <a href="#faq">24 FAQ</a>
+        </nav>
+        <div class="docs-sidebar-foot">INDEPENDENT APPLICATION<br />NO OFFICIAL IMD AFFILIATION</div>
+      </aside>
+
+      <main class="docs-content">
+        <section class="docs-hero" id="overview">
+          <p class="docs-kicker">COMPLETE PRODUCT MANUAL</p>
+          <h1>PERSONALITY.MD<br />DOCUMENTATION</h1>
+          <p class="docs-lead">Personality.md is an independent application layer for designing virtual influencers and translating their creative specification into work that the IMD network can validate</p>
+          <div class="docs-status-grid">
+            <div><span>PRODUCT STATE</span><b>LOCAL PROTOTYPE</b></div>
+            <div><span>LIVE READS</span><b>IMD JOBS</b></div>
+            <div><span>LIVE WRITES</span><b>CHECK + QUOTE + SUBMIT</b></div>
+            <div><span>PAYMENT</span><b>WALLET CONFIRMATION</b></div>
+            <div><span>REFERENCE SET</span><b>21 ORIGINAL IMAGES</b></div>
+            <div><span>PRIMARY OUTPUTS</span><b>IMAGE + VIDEO</b></div>
+          </div>
+        </section>
+
+        <section class="docs-section" id="principles">
+          <div class="docs-section-index">02</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">PRODUCT PRINCIPLES</p>
+            <h2>WHAT THE PRODUCT IS DESIGNED TO DO</h2>
+            <div class="principle-grid">
+              <article><b>HIDE INFRASTRUCTURE COMPLEXITY</b><p>Users describe the influencer inside Personality.md while the application translates their choices into an IMD compatible request</p></article>
+              <article><b>USE REAL NETWORK DATA</b><p>The Explorer displays public jobs returned by IMD and never presents invented objectives as live work</p></article>
+              <article><b>FAIL CLOSED</b><p>Unsupported uploads social publishing and unavailable provider operations remain blocked instead of showing fictional success</p></article>
+              <article><b>MAINTAIN IDENTITY CONSISTENCY</b><p>Every generated image and video request includes the selected appearance voice audience values and boundaries</p></article>
+              <article><b>SEPARATE DESIGN FROM PAYMENT</b><p>Users can design and validate a personality before any paid admission flow exists</p></article>
+              <article><b>DISCLOSE SYNTHETIC MEDIA</b><p>The product treats virtual influencers as AI generated identities and does not present them as real people</p></article>
+            </div>
+          </div>
+        </section>
+
+        <section class="docs-section" id="architecture">
+          <div class="docs-section-index">03</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">SYSTEM MAP</p>
+            <h2>ARCHITECTURE</h2>
+            <div class="architecture-flow">
+              <div><span>01</span><b>BROWSER UI</b><small>Landing Explorer Creator Docs</small></div>
+              <i>→</i>
+              <div><span>02</span><b>OBJECTIVE COMPOSER</b><small>Structured fields become plain language</small></div>
+              <i>→</i>
+              <div><span>03</span><b>SAME ORIGIN BRIDGE</b><small>Local Vite middleware forwards allowed calls</small></div>
+              <i>→</i>
+              <div><span>04</span><b>IMD CONTROL PLANE</b><small>Jobs check and quote endpoints</small></div>
+            </div>
+            <div class="docs-callout warning"><b>PRODUCTION REQUIREMENT</b><p>The current same origin bridge is implemented as Vite development middleware A public deployment needs a persistent backend or serverless API implementing the same routes before live reads checks and quotes can work outside local development</p></div>
+            <table class="docs-table">
+              <thead><tr><th>LAYER</th><th>RESPONSIBILITY</th><th>CURRENT STATE</th></tr></thead>
+              <tbody>
+                <tr><td>Landing</td><td>Product explanation live activity preview and media examples</td><td>Implemented</td></tr>
+                <tr><td>Explorer</td><td>Read real IMD jobs and filter network activity</td><td>Implemented</td></tr>
+                <tr><td>Creator</td><td>Build a structured influencer and validate the objective</td><td>Implemented</td></tr>
+                <tr><td>Bridge</td><td>Protect cross origin IMD routes behind same origin requests</td><td>Local development only</td></tr>
+                <tr><td>Payment client</td><td>Handle x402 challenge Permit2 approval two wallet signatures paid submit and status polling</td><td>Implemented</td></tr>
+                <tr><td>Persistence</td><td>Store user personalities files jobs and results</td><td>Not implemented</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="docs-section" id="homepage">
+          <div class="docs-section-index">04</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">PUBLIC ENTRY</p>
+            <h2>HOMEPAGE</h2>
+            <h3>Industrial control room</h3>
+            <p>The first section uses an industrial machine wall with blue indicators a large Personality.md terminal an IMD inspired desk scene and animated characters</p>
+            <p>The machinery is visual only and does not navigate to external destinations</p>
+            <h3>Decorative terminal</h3>
+            <p>The homepage terminal explains the agent roles but accepts no operational commands Every submitted line returns <code>WRONG COMMAND</code> in red</p>
+            <p>Influencer creation is intentionally moved away from the terminal and into the dedicated Creator Studio</p>
+            <h3>Header behavior</h3>
+            <ul>
+              <li>EXPLORER scrolls to live IMD activity</li>
+              <li>PERSONALITIES scrolls to video examples</li>
+              <li>SWARM explains the agent roles</li>
+              <li>PROTOCOL explains the operating loop</li>
+              <li>DOCS opens this complete manual in a new tab</li>
+              <li>CREATE opens the standalone Creator Studio in a new tab</li>
+              <li>CONNECT requests wallet access only after a deliberate click</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="docs-section" id="explorer">
+          <div class="docs-section-index">05</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">REAL NETWORK ACTIVITY</p>
+            <h2>EXPLORER</h2>
+            <p>The Explorer reads public jobs from IMD through <code>GET /api/imd/jobs</code> and renders their real objective state identifier and update time</p>
+            <div class="docs-columns">
+              <div><h3>ALL</h3><p>Displays the current job page returned by IMD excluding oracle panel jobs</p></div>
+              <div><h3>MEDIA</h3><p>Filters objectives and templates containing video image media audio creative content visual avatar character or influencer terms</p></div>
+              <div><h3>ACTIVE</h3><p>Removes completed blocked failed cancelled and superseded work from the current view</p></div>
+            </div>
+            <p>The displayed count is the number of jobs received in the current request and is not presented as the total historical size of IMD</p>
+            <p>If the upstream request fails the feed shows a network unavailable state rather than replacing the jobs with mock data</p>
+          </div>
+        </section>
+
+        <section class="docs-section" id="creator">
+          <div class="docs-section-index">06</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">STANDALONE WORKSPACE</p>
+            <h2>CREATOR STUDIO</h2>
+            <p>The Creator Studio lives at <code>/create.html</code> and opens independently from the homepage so a user can build a personality without losing the Explorer state</p>
+            <div class="step-list">
+              <article><span>01</span><div><b>CORE IDENTITY</b><p>Display name niche audience purpose campaign direction and free form brief</p></div></article>
+              <article><span>02</span><div><b>APPEARANCE SYSTEM</b><p>Character type build hairstyle heritage age presentation and eye color</p></div></article>
+              <article><span>03</span><div><b>YOUR IMAGE REFERENCES</b><p>Up to six local images for face identity wardrobe palette pose product location lighting or art direction plus written instructions for how each reference should be used</p></div></article>
+              <article><span>04</span><div><b>VOICE AND BEHAVIOR</b><p>Archetype tone language values forbidden topics and disclosure rules</p></div></article>
+              <article><span>05</span><div><b>FIRST PRODUCTION</b><p>Portrait plus video vertical video or image reference pack</p></div></article>
+            </div>
+            <h3>Live request console</h3>
+            <p>The right side console updates as the form changes and shows the selected visual identity niche heritage voice output local file count and complete composed objective</p>
+            <p>Changing any field invalidates the earlier IMD validation and disables quote creation until the request is checked again</p>
+          </div>
+        </section>
+
+        <section class="docs-section" id="references">
+          <div class="docs-section-index">07</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">ORIGINAL ASSET SYSTEM</p>
+            <h2>VISUAL REFERENCES</h2>
+            <p>Personality.md contains 21 original selector images generated specifically for this project No Higgsfield interface images are copied</p>
+            <table class="docs-table">
+              <thead><tr><th>GROUP</th><th>OPTIONS</th><th>PURPOSE</th></tr></thead>
+              <tbody>
+
+                <tr><td>Build</td><td>7</td><td>Slim athletic average curvy broad petite and plus size</td></tr>
+                <tr><td>Hairstyle</td><td>7</td><td>Seven eccentric sculptural fashion wigs based on the user supplied direction</td></tr>
+                <tr><td>Heritage reference</td><td>7</td><td>Seven diverse visual starting points for appearance direction</td></tr>
+              </tbody>
+            </table>
+            <h3>Current hairstyle set</h3>
+            <ul class="tag-list"><li>Lavender blunt bob</li><li>Golden bell bob</li><li>Emerald bowl bob</li><li>Rose cloud afro</li><li>Stepped block cut</li><li>Crimson flat top</li><li>Silver blunt bob</li></ul>
+            <p>Every category is deliberately capped at seven options to keep the decision surface focused and readable</p>
+            <p>Asset provenance is stored in <code>public/references/PROVENANCE.md</code></p>
+          </div>
+        </section>
+
+        <section class="docs-section" id="objective">
+          <div class="docs-section-index">08</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">REQUEST COMPILATION</p>
+            <h2>OBJECTIVE BUILDER</h2>
+            <p>The browser converts the form into one plain language production objective containing the following information</p>
+            <ol>
+              <li>Name and niche</li>
+              <li>Character type build heritage age presentation hairstyle and eye color</li>
+              <li>User supplied identity brief</li>
+              <li>Archetype tone and language</li>
+              <li>Values restrictions and disclosure requirements</li>
+              <li>Local image reference count and instructions for how they should guide the creation</li>
+              <li>Additional visual notes</li>
+              <li>Requested first production</li>
+              <li>A consistency requirement across every image and video</li>
+            </ol>
+            <div class="docs-code"><span>CONCEPTUAL OUTPUT</span><code>Create a coherent virtual influencer called NAME for NICHE — APPEARANCE — IDENTITY BRIEF — VOICE — BOUNDARIES — FIRST PRODUCTION — maintain the same recognizable identity across every image and video</code></div>
+            <p>Terminal full stops are removed from user facing copy but internal API syntax URLs selectors and technical values retain their required characters</p>
+          </div>
+        </section>
+
+        <section class="docs-section" id="imd">
+          <div class="docs-section-index">09</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">NETWORK LAYER</p>
+            <h2>IMD INTEGRATION</h2>
+            <p>IMD exposes a public control plane at <code>https://api.imd.fun</code> and an Explorer at <code>https://explorer.imd.fun</code></p>
+            <p>Personality.md currently uses public job reads plus request checking and quote creation</p>
+            <table class="docs-table">
+              <thead><tr><th>PERSONALITY ROUTE</th><th>IMD DESTINATION</th><th>USE</th></tr></thead>
+              <tbody>
+                <tr><td>GET /api/imd/jobs</td><td>GET /jobs</td><td>Read real public work</td></tr>
+                <tr><td>POST /api/imd/check</td><td>POST /requests/check</td><td>Run free planning and blocker validation</td></tr>
+                <tr><td>POST /api/imd/quote</td><td>POST /requests/quote</td><td>Save a real priced unpaid order</td></tr>
+              </tbody>
+            </table>
+            <h3>Media skills used by the request builder</h3>
+            <ul>
+              <li><code>create-image</code> for character portraits and image packs</li>
+              <li><code>create-video</code> for vertical introduction videos</li>
+              <li>A chain combines image creation followed by video creation for the default output</li>
+            </ul>
+            <p>Personality.md is not an official IMD product and does not claim control over IMD workers pricing availability results or policy</p>
+            <a class="docs-external" href="https://imd.fun/docs/" target="_blank" rel="noopener noreferrer">OPEN OFFICIAL IMD API DOCS ↗</a>
+          </div>
+        </section>
+
+        <section class="docs-section" id="validation">
+          <div class="docs-section-index">10</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">FREE PRECHECK</p>
+            <h2>VALIDATION</h2>
+            <p>VALIDATE WITH LIVE IMD sends the composed request to the live IMD planner without payment</p>
+            <p>The response can contain a proposed plan facts blockers and suggestions</p>
+            <div class="state-grid">
+              <div><b>LOADING</b><p>The request is being checked by the upstream planner</p></div>
+              <div><b>SUCCESS</b><p>The plan contains no blockers and quote creation can be enabled</p></div>
+              <div><b>ERROR</b><p>The request failed transport validation or returned one or more blockers</p></div>
+              <div><b>CHANGED</b><p>A form edit makes the earlier validation stale and quote creation is disabled</p></div>
+            </div>
+            <p>A successful check does not mean a job exists and does not guarantee that future paid work will complete successfully</p>
+          </div>
+        </section>
+
+        <section class="docs-section" id="quotes">
+          <div class="docs-section-index">11</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">REAL PAID ADMISSION</p>
+            <h2>QUOTES AND PAYMENT</h2>
+            <p>CREATE IMD QUOTE generates a fresh UUID request key and sends the validated action and input to IMD</p>
+            <p>The returned order is real but remains unpaid until the user reviews the exact live price network asset recipient and expiry</p>
+            <h3>Authentication</h3>
+            <p>The browser generates a random 32 byte token encoded as 64 hexadecimal characters and stores it in session storage The local bridge forwards it as a Bearer credential and uses the same token to recover order status</p>
+            <h3>Wallet sequence</h3>
+            <ol>
+              <li>Connect an injected Ethereum wallet after an explicit click</li>
+              <li>Switch to Ethereum Mainnet when required</li>
+              <li>Read the wallet allowance granted to the official Permit2 contract</li>
+              <li>Request a reusable IMD token approval only when the allowance is insufficient</li>
+              <li>Request the x402 v2 challenge for the saved order</li>
+              <li>Sign the Permit2 payment authorization</li>
+              <li>Sign the EIP-712 QuoteApproval binding the exact payment payload to the exact IMD quote</li>
+              <li>Submit both signatures through the same origin bridge</li>
+              <li>Poll the saved order until it is admitted failed or expired</li>
+            </ol>
+            <div class="docs-callout warning"><b>EXPLICIT APPROVAL</b><p>Personality.md never pays on page load Quote creation does not charge anything and every token approval payment signature and quote signature requires a visible wallet confirmation</p></div>
+            <div class="docs-callout"><b>LIVE TERMS</b><p>The current job price is read from each IMD quote rather than hard coded The interface displays the token amount Ethereum Mainnet asset recipient order ID and expiry before enabling payment</p></div>
+            <p>A successful payment purchases admission to IMD It does not guarantee that the generated work will complete or satisfy every creative expectation</p>
+          </div>
+        </section>
+
+        <section class="docs-section" id="attachments">
+          <div class="docs-section-index">12</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">LOCAL REFERENCES</p>
+            <h2>ATTACHMENTS</h2>
+            <p>Users can select up to six PNG JPEG or WEBP files with a maximum size of 8 MB each</p>
+            <p>The browser creates temporary object URLs for previews and revokes them after loading</p>
+            <p>The files are not uploaded to Personality.md and are not sent to IMD</p>
+            <h3>Why quote creation is blocked</h3>
+            <p>The current public paid request interface does not expose a customer file upload route compatible with job input files</p>
+            <p>IMD bundle and artifact upload routes require contributor device credentials or an artifact lease and are not equivalent to a public customer attachment endpoint</p>
+            <p>When local files are present validation can still test the text objective but quote creation remains disabled to prevent a misleading submission</p>
+            <div class="docs-callout warning"><b>REFERENCE NOTES ARE SENT</b><p>Written notes describing what should be preserved from local files are included in the composed objective but the image bytes themselves remain local</p></div>
+          </div>
+        </section>
+
+        <section class="docs-section" id="wallet">
+          <div class="docs-section-index">13</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">EXPLICIT CONSENT</p>
+            <h2>WALLET</h2>
+            <p>The site does not request accounts during initial page load</p>
+            <p>CONNECT calls <code>eth_requestAccounts</code> only after the user presses the button</p>
+            <p>After connection the header displays a shortened public address</p>
+            <p>The wallet can be asked to switch to Ethereum Mainnet and can display a separate Permit2 approval transaction when the IMD allowance is insufficient</p>
+            <p>The paid flow then requests one x402 Permit2 payment signature and one EIP-712 quote approval signature from the same wallet</p>
+            <p>No private key or seed phrase is requested stored transmitted or exposed by Personality.md</p>
+            <p>If no injected wallet exists the UI reports that no browser wallet was detected</p>
+          </div>
+        </section>
+
+        <section class="docs-section" id="jobs">
+          <div class="docs-section-index">14</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">WORK LIFECYCLE</p>
+            <h2>JOBS AND RESULTS</h2>
+            <p>An IMD quote is not a job A job exists only after the separate payment and admission flow succeeds</p>
+            <p>Public IMD job records can expose state objective template timestamps delivery information accepted submissions and result files depending on job progress</p>
+            <h3>Current Personality.md coverage</h3>
+            <ul>
+              <li>Read public job summaries</li>
+              <li>Filter media and active work</li>
+              <li>Validate a new job body</li>
+              <li>Create a real unpaid quote</li>
+              <li>Review the exact live IMD payment terms</li>
+              <li>Check and request Permit2 approval</li>
+              <li>Sign and submit a real x402 payment</li>
+              <li>Poll payment and admission state</li>
+              <li>Map successful admission to the real job status URL</li>
+            </ul>
+            <h3>Future coverage required</h3>
+            <ul>
+              <li>Poll the admitted job until the creative work completes</li>
+              <li>Read accepted files from the result endpoint</li>
+              <li>Display image video and report outputs</li>
+              <li>Continue an existing personality project</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="docs-section" id="media">
+          <div class="docs-section-index">15</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">PERSONALITY INDEX</p>
+            <h2>MEDIA EXAMPLES</h2>
+            <p>The Personality Index contains four user supplied vertical videos stored locally under <code>public/videos</code></p>
+            <ul>
+              <li>Videos use a 9 by 16 display container</li>
+              <li>Playback starts on pointer hover or keyboard focus</li>
+              <li>Playback is muted looped and inline</li>
+              <li>Leaving the card pauses the video and resets it to the beginning</li>
+              <li>Each video has a locally extracted poster frame</li>
+            </ul>
+            <p>The cards are examples of possible virtual influencer media and are not presented as outputs created through the current Personality.md request flow</p>
+          </div>
+        </section>
+
+        <section class="docs-section" id="agents">
+          <div class="docs-section-index">16</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">OPERATING MODEL</p>
+            <h2>AGENT RESPONSIBILITIES</h2>
+            <table class="docs-table">
+              <thead><tr><th>ROLE</th><th>RESPONSIBILITY</th><th>CURRENT PRODUCT STATE</th></tr></thead>
+              <tbody>
+                <tr><td>Identity Architect</td><td>Biography values voice boundaries and long term goals</td><td>Represented in the brief</td></tr>
+                <tr><td>Visual Director</td><td>Face wardrobe environments framing and visual consistency</td><td>Represented in appearance fields</td></tr>
+                <tr><td>Content Room</td><td>Scripts posts story arcs and channel plans</td><td>Future workflow</td></tr>
+                <tr><td>Policy Guard</td><td>Disclosure permission impersonation and budget checks</td><td>Represented in boundaries</td></tr>
+                <tr><td>Growth Analyst</td><td>Performance evidence and recommendations</td><td>Future workflow</td></tr>
+                <tr><td>Publisher</td><td>Channel specific scheduling and distribution</td><td>Not implemented</td></tr>
+              </tbody>
+            </table>
+            <p>These roles describe the product architecture and intended orchestration They are not a claim that every named agent is currently running for every request</p>
+          </div>
+        </section>
+
+        <section class="docs-section" id="safety">
+          <div class="docs-section-index">17</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">RESPONSIBLE CREATION</p>
+            <h2>SAFETY AND IDENTITY RULES</h2>
+            <ul>
+              <li>Do not impersonate a real person without documented authorization</li>
+              <li>Do not present generated media as authentic footage</li>
+              <li>Disclose AI generated identity and media where audiences could be misled</li>
+              <li>Do not upload private credentials identity documents or confidential client material</li>
+              <li>Define forbidden topics claims and behaviors before production</li>
+              <li>Review every output before social publication</li>
+              <li>Respect publicity copyright trademark and platform rules</li>
+              <li>Do not assume ownership of third party visual references</li>
+            </ul>
+            <p>The original selector images are design references rather than permission to reproduce a real person</p>
+          </div>
+        </section>
+
+        <section class="docs-section" id="privacy">
+          <div class="docs-section-index">18</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">CURRENT DATA MODEL</p>
+            <h2>DATA AND PRIVACY</h2>
+            <table class="docs-table">
+              <thead><tr><th>DATA</th><th>LOCATION</th><th>LIFETIME</th></tr></thead>
+              <tbody>
+                <tr><td>Form fields</td><td>Browser memory</td><td>Until refresh or navigation</td></tr>
+                <tr><td>Reference files</td><td>Browser file objects</td><td>Until removed or page closed</td></tr>
+                <tr><td>Reference previews</td><td>Temporary object URLs</td><td>Revoked after image load</td></tr>
+                <tr><td>IMD request token</td><td>Session storage</td><td>Current tab session</td></tr>
+                <tr><td>Public jobs</td><td>Fetched from IMD</td><td>Current page memory</td></tr>
+                <tr><td>Created quote</td><td>IMD control plane</td><td>Defined by IMD order policy</td></tr>
+              </tbody>
+            </table>
+            <p>Personality.md currently has no user account database analytics pipeline cloud file storage or personality library</p>
+            <p>The source contains no wallet private keys provider API keys or payment secrets</p>
+          </div>
+        </section>
+
+        <section class="docs-section" id="accessibility">
+          <div class="docs-section-index">19</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">INTERACTION QUALITY</p>
+            <h2>ACCESSIBILITY AND RESPONSIVE DESIGN</h2>
+            <ul>
+              <li>Semantic labels connect controls to their names</li>
+              <li>Visual option cards use real radio inputs</li>
+              <li>Videos can play through pointer hover or keyboard focus</li>
+              <li>Selected cards expose checked state to assistive technology</li>
+              <li>Status areas use live regions for validation feedback</li>
+              <li>Reduced motion preferences minimize animations and transitions</li>
+              <li>Desktop grids collapse to readable mobile columns</li>
+              <li>The Creator header and controls fit a true 390 pixel CSS viewport without horizontal overflow</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="docs-section" id="api">
+          <div class="docs-section-index">20</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">LOCAL BRIDGE CONTRACT</p>
+            <h2>LOCAL API</h2>
+            <h3>GET /api/imd/jobs</h3>
+            <div class="docs-code"><code>GET /api/imd/jobs?limit=60&amp;exclude=oracle</code></div>
+            <p>Forwards a bounded public job request to IMD with a maximum local limit of 100</p>
+            <h3>POST /api/imd/check</h3>
+            <div class="docs-code"><code>{ "action": "job.open", "input": { "objective": "...", "skill": "create-video", "outputs": [] } }</code></div>
+            <p>Forwards the proposed body to the free IMD request checker</p>
+            <h3>POST /api/imd/quote</h3>
+            <div class="docs-code"><code>{ "action": "job.open", "input": { ... }, "requestKey": "UUID" }</code></div>
+            <p>Requires <code>x-personality-request-token</code> containing exactly 64 hexadecimal characters The bridge forwards it as an Authorization Bearer token</p>
+            <h3>POST /api/imd/orders/:id/submit</h3>
+            <p>Without a payment header this route returns the live x402 challenge With <code>PAYMENT-SIGNATURE</code> and a quoteSignature body it forwards the signed payment and admission request to IMD</p>
+            <h3>GET /api/imd/orders/:id</h3>
+            <p>Reads the private saved order using the same client token and returns quoted payment pending admission pending admitted payment failed or expired state</p>
+            <h3>GET /api/imd/capabilities</h3>
+            <p>Reads enabled actions live prices network asset recipient limits and payment protocol configuration from IMD</p>
+            <h3>Bridge failure behavior</h3>
+            <ul>
+              <li>Unknown local routes return 404</li>
+              <li>Invalid request tokens return 401</li>
+              <li>Upstream transport failures return 502</li>
+              <li>Upstream status and JSON bodies are preserved where possible</li>
+              <li>Responses use no store cache headers</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="docs-section" id="development">
+          <div class="docs-section-index">21</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">LOCAL WORKFLOW</p>
+            <h2>DEVELOPMENT</h2>
+            <div class="docs-command-grid">
+              <div><span>INSTALL</span><code>npm install</code></div>
+              <div><span>DEVELOPMENT</span><code>npm run dev -- --port 4178</code></div>
+              <div><span>CHECKS</span><code>npm run check</code></div>
+              <div><span>BUILD</span><code>npm run build</code></div>
+            </div>
+            <h3>Local routes</h3>
+            <ul>
+              <li><code>http://127.0.0.1:4178/</code> landing and Explorer</li>
+              <li><code>http://127.0.0.1:4178/create.html</code> Creator Studio</li>
+              <li><code>http://127.0.0.1:4178/docs.html</code> complete documentation</li>
+            </ul>
+            <p>The production build is multi page and must emit index.html create.html and docs.html</p>
+          </div>
+        </section>
+
+        <section class="docs-section" id="files">
+          <div class="docs-section-index">22</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">PROJECT MAP</p>
+            <h2>IMPORTANT FILES</h2>
+            <table class="docs-table file-table">
+              <tbody>
+                <tr><td>index.html</td><td>Landing live IMD jobs Explorer and public product sections</td></tr>
+                <tr><td>create.html</td><td>Standalone influencer Creator Studio</td></tr>
+                <tr><td>docs.html</td><td>Complete product and integration documentation</td></tr>
+                <tr><td>src/main.js</td><td>Live IMD jobs Explorer decorative terminal videos and public interactions</td></tr>
+                <tr><td>src/create.js</td><td>Standalone creator validation live quote wallet Permit2 x402 submit and admission polling</td></tr>
+                <tr><td>src/imd-payment.js</td><td>Canonical payment hashing quote approval types amount formatting and status labels</td></tr>
+                <tr><td>server/imd-paid-routes.js</td><td>Fail closed paid route mapping token validation and IMD request construction</td></tr>
+                <tr><td>src/styles.css</td><td>Landing Explorer responsive system and media cards</td></tr>
+                <tr><td>src/create.css</td><td>Black Creator Studio visual system</td></tr>
+                <tr><td>src/docs.css</td><td>Documentation layout navigation tables and mobile rules</td></tr>
+                <tr><td>vite.config.js</td><td>Multi page build and local IMD bridge</td></tr>
+                <tr><td>scripts/check.mjs</td><td>Required asset behavior and route assertions</td></tr>
+                <tr><td>public/references</td><td>21 original visual selector images plus provenance</td></tr>
+                <tr><td>public/videos</td><td>Four vertical examples poster images and provenance</td></tr>
+                <tr><td>public/imd-assets</td><td>Industrial scene assets and provenance warning</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="docs-section" id="limitations">
+          <div class="docs-section-index">23</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">HONEST BOUNDARIES</p>
+            <h2>CURRENT LIMITATIONS</h2>
+            <div class="limitation-list">
+              <article><b>NO CUSTOMER IMAGE UPLOAD TO IMD</b><p>Local reference files remain in the browser</p></article>
+              <article><b>NO PERSONALITY DATABASE</b><p>Refreshing the page resets the form and selected local files</p></article>
+              <article><b>NO RESULT DASHBOARD</b><p>The application connects admission to the job status URL but does not yet retrieve and render accepted media</p></article>
+              <article><b>NO SOCIAL PUBLISHING</b><p>No account creation scheduling posting or platform credentials exist</p></article>
+              <article><b>NO PERSISTENT MEMORY</b><p>The intended long term identity memory is not stored by the current frontend</p></article>
+              <article><b>LOCAL BRIDGE ONLY</b><p>The Vite middleware must become a production backend before deployment</p></article>
+              <article><b>THIRD PARTY ASSET REVIEW</b><p>IMD derived industrial assets require permission review before commercial publication</p></article>
+            </div>
+          </div>
+        </section>
+
+        <section class="docs-section" id="faq">
+          <div class="docs-section-index">24</div>
+          <div class="docs-section-body">
+            <p class="docs-eyebrow">COMMON QUESTIONS</p>
+            <h2>FAQ</h2>
+            <details open><summary>IS PERSONALITY.MD AN OFFICIAL IMD PRODUCT</summary><p>No It is an independent application concept using IMD public data and request APIs</p></details>
+            <details><summary>DOES VALIDATION COST MONEY</summary><p>No The current check route is used before quote creation and does not perform payment</p></details>
+            <details><summary>DOES CREATE IMD QUOTE START A JOB</summary><p>No It saves a real unpaid order The user must then review the terms approve Permit2 when required sign the payment and sign the quote approval</p></details>
+            <details><summary>WHEN DOES IMD CHARGE THE WALLET</summary><p>Only after the user presses the payment control and confirms the required wallet prompts Quote creation and validation do not charge</p></details>
+            <details><summary>ARE MY REFERENCE IMAGES SENT TO IMD</summary><p>No They stay in the browser Only written reference notes are included in the objective</p></details>
+            <details><summary>WHY IS THE QUOTE BUTTON DISABLED WHEN I ADD IMAGES</summary><p>Because claiming those files were attached would be false until IMD exposes a supported customer upload route</p></details>
+            <details><summary>ARE THE SELECTOR IMAGES FROM HIGGSFIELD</summary><p>No All 21 selector images are original assets generated for Personality.md</p></details>
+            <details><summary>CAN THE SITE PUBLISH TO SOCIAL NETWORKS</summary><p>No Social operation is part of the planned product model but is not implemented</p></details>
+            <details><summary>DOES CONNECT SPEND FUNDS</summary><p>No CONNECT requests account access only Spending requires the later Permit2 approval and payment confirmations</p></details>
+            <details><summary>WHY DOES THE TERMINAL SAY WRONG COMMAND</summary><p>The terminal is a decorative explanation surface Influencer creation belongs in the Creator Studio</p></details>
+            <details><summary>CAN THIS BE DEPLOYED AS A STATIC SITE</summary><p>The pages can be built statically but live IMD calls require a production backend replacing the development bridge</p></details>
+          </div>
+        </section>
+
+        <footer class="docs-footer">
+          <div><b>PERSONALITY.MD</b><span>INDEPENDENT VIRTUAL INFLUENCER APPLICATION LAYER</span></div>
+          <div><span>DOCS VERIFIED</span><b>2026-10-05</b></div>
+        </footer>
+      </main>
+    </div>
+    <script type="module" src="/src/docs.js"></script>
+  </body>
+</html>

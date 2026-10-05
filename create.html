@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Create an original virtual influencer with Personality.md" />
+    <meta name="theme-color" content="#050505" />
+    <link rel="icon" href="/personality-mark.svg" type="image/svg+xml" />
+    <title>Create · Personality.md</title>
+  </head>
+  <body class="create-page">
+    <header class="topbar create-topbar">
+      <a class="brand" href="/" aria-label="Personality.md home"><span class="brand-mark" aria-hidden="true">◇</span><span class="brand-name">PERSONALITY.MD</span></a>
+      <div class="create-route-label"><span>⌁</span> INFLUENCER CREATION STUDIO</div>
+      <div class="header-actions"><a class="create-back" href="/#explorer">EXPLORER</a><button class="connect-button" id="connectButton" type="button">CONNECT</button></div>
+    </header>
+
+    <main class="create-shell">
+      <section class="create-intro">
+        <p class="eyebrow">ORIGINAL CHARACTER SYSTEM</p>
+        <h1>BUILD A PERSONALITY</h1>
+        <p>Define a coherent virtual influencer through visual references personality direction and an IMD compatible production brief</p>
+        <div class="create-progress" aria-label="Creation steps"><span class="active">01 IDENTITY</span><span>02 APPEARANCE</span><span>03 REFERENCES</span><span>04 BEHAVIOR</span><span>05 OUTPUT</span></div>
+      </section>
+
+      <form class="studio-grid" id="creatorForm">
+        <div class="studio-form">
+          <section class="studio-section" id="identityStep">
+            <div class="studio-section-head"><span>01</span><div><h2>CORE IDENTITY</h2><p>Start with the role audience and purpose of the influencer</p></div></div>
+            <div class="dark-fields cols-2">
+              <label><span>DISPLAY NAME</span><input name="displayName" maxlength="80" placeholder="Nova Vale" required /></label>
+              <label><span>NICHE</span><select name="niche" required><option value="">Select a niche</option><option>Fashion and beauty</option><option>Technology</option><option>Music and culture</option><option>Gaming</option><option>Fitness and wellness</option><option>Travel and lifestyle</option><option>Finance and business</option><option>Food and hospitality</option></select></label>
+            </div>
+            <label class="dark-field"><span>INFLUENCER BRIEF</span><textarea name="brief" rows="6" maxlength="4000" placeholder="Describe the audience goals visual world values boundaries and first campaign" required></textarea></label>
+          </section>
+
+          <section class="studio-section" id="appearanceStep">
+            <div class="studio-section-head"><span>02</span><div><h2>APPEARANCE SYSTEM</h2><p>Every reference is original and every category is limited to seven focused options</p></div></div>
+
+
+            <fieldset class="visual-group build-group"><legend>BUILD <small>7 OPTIONS</small></legend><div class="visual-options">
+              <label><input type="radio" name="build" value="Slim" checked /><img src="/references/build-1.webp" alt="Original slim build reference" /><b>SLIM</b></label>
+              <label><input type="radio" name="build" value="Athletic" /><img src="/references/build-2.webp" alt="Original athletic build reference" /><b>ATHLETIC</b></label>
+              <label><input type="radio" name="build" value="Average" /><img src="/references/build-3.webp" alt="Original average build reference" /><b>AVERAGE</b></label>
+              <label><input type="radio" name="build" value="Curvy" /><img src="/references/build-4.webp" alt="Original curvy build reference" /><b>CURVY</b></label>
+              <label><input type="radio" name="build" value="Broad" /><img src="/references/build-5.webp" alt="Original broad build reference" /><b>BROAD</b></label>
+              <label><input type="radio" name="build" value="Petite" /><img src="/references/build-6.webp" alt="Original petite build reference" /><b>PETITE</b></label>
+              <label><input type="radio" name="build" value="Plus size" /><img src="/references/build-7.webp" alt="Original plus size build reference" /><b>PLUS</b></label>
+            </div></fieldset>
+
+            <fieldset class="visual-group"><legend>HAIRSTYLE <small>7 OPTIONS</small></legend><div class="visual-options">
+              <label><input type="radio" name="hairstyle" value="Lavender blunt bob" checked /><img src="/references/hair-1.webp" alt="Original lavender blunt bob hairstyle reference" /><b>LAVENDER BOB</b></label>
+              <label><input type="radio" name="hairstyle" value="Golden bell bob" /><img src="/references/hair-2.webp" alt="Original golden bell bob hairstyle reference" /><b>GOLDEN BELL</b></label>
+              <label><input type="radio" name="hairstyle" value="Emerald bowl bob" /><img src="/references/hair-3.webp" alt="Original emerald bowl bob hairstyle reference" /><b>EMERALD BOWL</b></label>
+              <label><input type="radio" name="hairstyle" value="Rose cloud afro" /><img src="/references/hair-4.webp" alt="Original rose cloud afro hairstyle reference" /><b>ROSE CLOUD</b></label>
+              <label><input type="radio" name="hairstyle" value="Stepped block cut" /><img src="/references/hair-5.webp" alt="Original stepped block cut hairstyle reference" /><b>STEPPED BLOCK</b></label>
+              <label><input type="radio" name="hairstyle" value="Crimson flat top" /><img src="/references/hair-6.webp" alt="Original crimson flat top hairstyle reference" /><b>CRIMSON TOP</b></label>
+              <label><input type="radio" name="hairstyle" value="Silver blunt bob" /><img src="/references/hair-7.webp" alt="Original silver blunt bob hairstyle reference" /><b>SILVER BOB</b></label>
+            </div></fieldset>
+
+            <fieldset class="visual-group heritage-group"><legend>HERITAGE REFERENCE <small>7 OPTIONS</small></legend><div class="visual-options">
+              <label><input type="radio" name="heritage" value="Black" checked /><img src="/references/heritage-1.webp" alt="Original Black heritage visual reference" /><b>BLACK</b></label>
+              <label><input type="radio" name="heritage" value="East Asian" /><img src="/references/heritage-2.webp" alt="Original East Asian heritage visual reference" /><b>EAST ASIAN</b></label>
+              <label><input type="radio" name="heritage" value="South Asian" /><img src="/references/heritage-3.webp" alt="Original South Asian heritage visual reference" /><b>SOUTH ASIAN</b></label>
+              <label><input type="radio" name="heritage" value="Latino or Hispanic" /><img src="/references/heritage-4.webp" alt="Original Latino heritage visual reference" /><b>LATINO</b></label>
+              <label><input type="radio" name="heritage" value="Middle Eastern" /><img src="/references/heritage-5.webp" alt="Original Middle Eastern heritage visual reference" /><b>MIDDLE EASTERN</b></label>
+              <label><input type="radio" name="heritage" value="White" /><img src="/references/heritage-6.webp" alt="Original White heritage visual reference" /><b>WHITE</b></label>
+              <label><input type="radio" name="heritage" value="Mixed heritage" /><img src="/references/heritage-7.webp" alt="Original mixed heritage visual reference" /><b>MIXED</b></label>
+            </div></fieldset>
+
+            <div class="dark-fields cols-3">
+              <label><span>AGE RANGE</span><select name="ageRange"><option>18 to 24</option><option selected>25 to 34</option><option>35 to 44</option><option>45 to 60</option><option>60 plus</option></select></label>
+              <label><span>PRESENTATION</span><select name="presentation"><option>Feminine</option><option>Masculine</option><option>Androgynous</option><option>Fluid</option></select></label>
+              <label><span>EYE COLOR</span><select name="eyeColor"><option>Brown</option><option>Blue</option><option>Green</option><option>Hazel</option><option>Gray</option><option>Black</option><option>Fantasy</option></select></label>
+            </div>
+          </section>
+
+          <section class="studio-section reference-section" id="referenceStep">
+            <div class="studio-section-head"><span>03</span><div><h2>YOUR IMAGE REFERENCES</h2><p>Upload your own images to define the face wardrobe colors pose lighting or visual world of the creation</p></div></div>
+            <div class="reference-explainer"><div><span>01</span><b>ADD IMAGES</b><small>Choose up to 6 PNG JPEG or WEBP files</small></div><div><span>02</span><b>PREVIEW LOCALLY</b><small>Review and remove every image before validation</small></div><div><span>03</span><b>DESCRIBE THEIR USE</b><small>Explain exactly what the creation should preserve</small></div></div>
+            <label class="dark-upload"><input id="referenceFiles" type="file" accept="image/png,image/jpeg,image/webp" multiple /><span>⊕</span><b>UPLOAD IMAGE REFERENCES</b><small>Face identity outfit palette pose product location or art direction · maximum 6 images</small></label>
+            <div class="reference-count" id="referenceCount" aria-live="polite">0 / 6 REFERENCE IMAGES SELECTED</div>
+            <div class="local-files" id="localFiles"></div>
+            <label class="dark-field"><span>HOW SHOULD THESE REFERENCES BE USED</span><textarea name="referenceNotes" rows="4" maxlength="2000" placeholder="Example keep the facial structure from image 1 use the silver outfit from image 2 and use image 3 only for lighting and color"></textarea></label>
+            <p class="reference-boundary">Your images stay in this browser and remain part of the local creative brief · live IMD quote creation stays locked while local images are selected because its public customer request route does not currently accept direct image uploads</p>
+          </section>
+
+          <section class="studio-section" id="behaviorStep">
+            <div class="studio-section-head"><span>04</span><div><h2>VOICE AND BEHAVIOR</h2><p>Define how the influencer communicates and what it must never do</p></div></div>
+            <div class="dark-fields cols-3">
+              <label><span>ARCHETYPE</span><select name="archetype"><option>The Creator</option><option>The Explorer</option><option>The Sage</option><option>The Rebel</option><option>The Entertainer</option><option>The Caregiver</option><option>The Visionary</option></select></label>
+              <label><span>TONE</span><select name="tone"><option>Warm and conversational</option><option>Sharp and analytical</option><option>Playful and chaotic</option><option>Calm and aspirational</option><option>Bold and provocative</option><option>Elegant and restrained</option><option>Direct and educational</option></select></label>
+              <label><span>LANGUAGE</span><select name="language"><option>English</option><option>Spanish</option><option>Chinese</option><option>Japanese</option><option>Korean</option><option>Portuguese</option><option>French</option></select></label>
+            </div>
+            <label class="dark-field"><span>VALUES AND BOUNDARIES</span><textarea name="boundaries" rows="4" maxlength="2000" placeholder="State values forbidden topics disclosure rules and behaviors the agent must never use"></textarea></label>
+          </section>
+
+          <section class="studio-section" id="outputStep">
+            <div class="studio-section-head"><span>05</span><div><h2>FIRST PRODUCTION</h2><p>Choose the first deliverable the IMD media chain should validate</p></div></div>
+            <div class="dark-output-options">
+              <label><input type="radio" name="output" value="Identity portrait and 9:16 introduction video" checked /><span>⎔</span><b>PORTRAIT + VIDEO</b><small>Key art followed by one vertical introduction</small></label>
+              <label><input type="radio" name="output" value="9:16 social video" /><span>⋈</span><b>VERTICAL VIDEO</b><small>One social ready short form video</small></label>
+              <label><input type="radio" name="output" value="Character reference image pack" /><span>⌁</span><b>IMAGE PACK</b><small>One coherent visual reference pack</small></label>
+            </div>
+          </section>
+        </div>
+
+        <aside class="studio-console">
+          <div class="studio-console-title"><span>PERSONALITY REQUEST</span><span>IMD LIVE</span></div>
+          <div class="selected-preview" id="selectedPreview"><img src="/references/heritage-1.webp" alt="Selected heritage preview" /><div><small>SELECTED IDENTITY</small><b>UNNAMED</b><span>BLACK · SLIM · LAVENDER BOB</span></div></div>
+          <dl class="studio-facts"><div><dt>NICHE</dt><dd>NOT SELECTED</dd></div><div><dt>HERITAGE</dt><dd>BLACK</dd></div><div><dt>VOICE</dt><dd>WARM</dd></div><div><dt>OUTPUT</dt><dd>PORTRAIT + VIDEO</dd></div><div><dt>LOCAL FILES</dt><dd>0</dd></div></dl>
+          <div class="studio-objective"><span>COMPOSED OBJECTIVE</span><p id="objectivePreview">Complete the identity fields to compose the IMD production objective</p></div>
+          <div class="studio-validation" id="validationResult"><span>⌬</span><p>No validation has run</p></div>
+          <button type="button" class="studio-validate" id="validateRequest">VALIDATE WITH LIVE IMD</button>
+          <button type="button" class="studio-quote" id="createQuote" disabled>CREATE IMD QUOTE</button>
+          <section class="payment-panel" id="paymentPanel" hidden aria-live="polite">
+            <div class="payment-panel-head"><span>REAL IMD PAYMENT</span><b id="paymentState">QUOTE READY</b></div>
+            <dl class="payment-facts">
+              <div><dt>PRICE</dt><dd id="paymentPrice">—</dd></div>
+              <div><dt>NETWORK</dt><dd id="paymentNetwork">—</dd></div>
+              <div><dt>ASSET</dt><dd id="paymentAsset">—</dd></div>
+              <div><dt>RECIPIENT</dt><dd id="paymentRecipient">—</dd></div>
+              <div><dt>EXPIRES</dt><dd id="paymentExpiry">—</dd></div>
+              <div><dt>ORDER</dt><dd id="paymentOrder">—</dd></div>
+            </dl>
+            <p class="payment-disclosure">The wallet will show every approval and signature before IMD can charge anything · payment buys admission to the job and does not guarantee the final result</p>
+            <button type="button" class="payment-button" id="payAndStart">PAY WITH IMD AND START</button>
+            <button type="button" class="payment-refresh" id="refreshPaymentStatus" hidden>REFRESH IMD STATUS</button>
+            <a class="payment-job" id="paymentJobLink" href="#" target="_blank" rel="noopener noreferrer" hidden>OPEN LIVE IMD JOB ↗</a>
+          </section>
+          <p class="studio-boundary">Validation uses the live IMD planner · quotes and paid admission are sent to IMD · every token approval and signature requires explicit wallet confirmation</p>
+        </aside>
+      </form>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="/src/create.js"></script>
+  </body>
+</html>

@@ -1,0 +1,115 @@
+import { access, readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+
+const root = resolve(import.meta.dirname, '..');
+const required = [
+  'index.html',
+  'src/main.js',
+  'src/styles.css',
+  'public/personality-mark.svg',
+  'public/portraits/nova-reyes.png',
+  'public/portraits/orbit-kai.png',
+  'public/portraits/mira-vale.png',
+  'public/portraits/echo-441.png',
+  'public/imd-assets/wall-blue.png',
+  'public/imd-assets/desk.webp',
+  'public/imd-assets/pepe.webp',
+  'public/imd-assets/crew.webp',
+  'public/imd-assets/chair.webp',
+  'public/imd-assets/dog.webp',
+  'public/imd-assets/PROVENANCE.md',
+  'public/videos/personality-01.mp4',
+  'public/videos/personality-02.mp4',
+  'public/videos/personality-03.mp4',
+  'public/videos/personality-04.mp4',
+  'public/videos/personality-01-poster.jpg',
+  'public/videos/personality-02-poster.jpg',
+  'public/videos/personality-03-poster.jpg',
+  'public/videos/personality-04-poster.jpg',
+  'public/videos/PROVENANCE.md',
+  'vite.config.js',
+  'create.html',
+  'src/create.js',
+  'src/create.css',
+  'src/imd-payment.js',
+  'server/imd-paid-routes.js',
+  'server/imd-handler.js',
+  'api/imd/[...path].js',
+  'vercel.json',
+  'scripts/payment.test.mjs',
+  'docs.html',
+  'src/docs.js',
+  'src/docs.css',
+  'public/references/PROVENANCE.md',
+  ...['build', 'hair', 'heritage'].flatMap((group) => Array.from({ length: 7 }, (_, index) => `public/references/${group}-${index + 1}.webp`)),
+];
+
+await Promise.all(required.map((file) => access(resolve(root, file))));
+
+const [html, js, css, createHtml, createJs, createCss, docsHtml, docsJs, docsCss, apiHandler, vercelConfig] = await Promise.all([
+  readFile(resolve(root, 'index.html'), 'utf8'),
+  readFile(resolve(root, 'src/main.js'), 'utf8'),
+  readFile(resolve(root, 'src/styles.css'), 'utf8'),
+  readFile(resolve(root, 'create.html'), 'utf8'),
+  readFile(resolve(root, 'src/create.js'), 'utf8'),
+  readFile(resolve(root, 'src/create.css'), 'utf8'),
+  readFile(resolve(root, 'docs.html'), 'utf8'),
+  readFile(resolve(root, 'src/docs.js'), 'utf8'),
+  readFile(resolve(root, 'src/docs.css'), 'utf8'),
+  readFile(resolve(root, 'api/imd/[...path].js'), 'utf8'),
+  readFile(resolve(root, 'vercel.json'), 'utf8'),
+]);
+
+const assertions = [
+  [html.includes('<title>Personality.md</title>'), 'exact browser title'],
+  [html.includes('DISPLAY MODE'), 'decorative hero terminal label'],
+  [html.includes('href="#explorer"') && html.indexOf('href="#explorer"') < html.indexOf('href="#personalities"'), 'Explorer precedes Personalities'],
+  [html.includes('LIVE IMD JOBS') && !html.includes('BUILD A PERSONALITY') && !html.includes('id="builderPanel"'), 'main Explorer contains only live IMD jobs'],
+  [!js.includes("const builderForm = $('#builderForm')") && !js.includes("selectExplorerTab('builder')"), 'main script contains no embedded builder logic'],
+  [html.includes('/imd-assets/wall-blue.png'), 'blue IMD wall asset'],
+  [html.includes('No official affiliation') || html.includes('no official affiliation'), 'independence disclosure'],
+  [js.includes('WRONG COMMAND') && js.includes('wrong-command'), 'terminal always returns wrong command'],
+  [js.includes("fetch('/api/imd/jobs") && !js.includes("fetch('/api/imd/check") && !js.includes("fetch('/api/imd/quote"), 'main page only reads live IMD jobs'],
+  [(js.match(/\/videos\/personality-\d{2}\.mp4/g) || []).length === 4, 'four vertical video references'],
+  [js.includes("article.addEventListener('pointerenter', playVideo)"), 'hover video playback'],
+  [js.includes("article.addEventListener('pointerleave', resetVideo)"), 'hover video reset'],
+  [css.includes('aspect-ratio: 9 / 16'), 'vertical video containers'],
+  [css.includes('.explorer-section'), 'Explorer visual system'],
+  [css.includes('@media (max-width: 680px)'), 'mobile breakpoint'],
+  [css.includes('prefers-reduced-motion'), 'reduced motion support'],
+  [css.includes('z-index: 20'), 'desk characters layer above terminal'],
+  [html.includes('href="/create.html"') && html.includes('target="_blank"'), 'header Create opens a new tab'],
+  [html.includes('href="/docs.html"') && html.includes('target="_blank"') && html.includes('rel="noopener noreferrer"'), 'header Docs opens a secure new tab'],
+  [createHtml.includes('<title>Create · Personality.md</title>'), 'standalone creator page title'],
+  [!createHtml.includes('CHARACTER TYPE') && !createHtml.includes('name="characterType"') && !createJs.includes("selectedImage('characterType')"), 'character type image selector removed completely'],
+  [(createHtml.match(/name="build"/g) || []).length === 7, 'seven build references'],
+  [createHtml.includes('class="visual-group build-group"'), 'build selector has dedicated fitted full-body treatment'],
+  [createCss.includes('.build-group .visual-options img') && createCss.includes('object-fit:contain'), 'build figures fit fully inside their cards'],
+  [(createHtml.match(/name="hairstyle"/g) || []).length === 7, 'seven hairstyle references'],
+  [(createHtml.match(/name="heritage"/g) || []).length === 7, 'seven heritage references'],
+  [createHtml.includes('class="visual-group heritage-group"'), 'heritage selector has dedicated fitted portrait treatment'],
+  [createCss.includes('.heritage-group .visual-options img') && createCss.includes('object-fit:contain'), 'heritage portraits fit fully inside their cards'],
+  [createJs.includes("fetch('/api/imd/check") && createJs.includes("fetch('/api/imd/quote"), 'creator live IMD validation and quote routes'],
+  [createCss.includes('.visual-options') && createCss.includes('grid-template-columns:repeat(7'), 'black visual reference selector layout'],
+  [createHtml.includes('YOUR IMAGE REFERENCES') && createHtml.includes('UPLOAD IMAGE REFERENCES') && createHtml.includes('referenceCount'), 'dedicated user image reference workflow'],
+  [createJs.includes('Local creative brief contains') && createJs.includes('maximum 6 images'), 'local reference images enter the creative brief with enforced limit'],
+  [!createJs.includes('validationResult.innerHTML') && !createJs.includes('card.innerHTML'), 'creator does not inject filenames or upstream messages through innerHTML'],
+  [createHtml.includes('id="paymentPanel"') && createHtml.includes('id="payAndStart"') && createHtml.includes('PAY WITH IMD AND START'), 'explicit IMD payment review panel'],
+  [createJs.includes("from '@x402/core/client'") && createJs.includes("from '@x402/evm/exact/client'") && createJs.includes('encodePaymentSignatureHeader'), 'official x402 client payment libraries'],
+  [createJs.includes("fetch(`/api/imd/orders/${currentOrder.id}/submit`") && createJs.includes("fetch(`/api/imd/orders/${currentOrder.id}`"), 'paid submit and order polling routes'],
+  [createJs.includes('eth_requestAccounts') && createJs.includes('wallet_switchEthereumChain') && createJs.includes('signTypedData'), 'wallet connection network switch and explicit signatures'],
+  [createCss.includes('.payment-panel') && createCss.includes('.payment-button'), 'paid flow visual system'],
+  [docsHtml.includes('<title>Docs · Personality.md</title>') && docsHtml.includes('COMPLETE PRODUCT MANUAL'), 'standalone complete Docs page'],
+  [docsHtml.includes('IMD INTEGRATION') && docsHtml.includes('QUOTES AND PAYMENT') && docsHtml.includes('ATTACHMENTS') && docsHtml.includes('CURRENT LIMITATIONS'), 'Docs covers integration payment files and limitations'],
+  [docsHtml.includes('NO OFFICIAL IMD AFFILIATION') && docsHtml.includes('not an official IMD product'), 'Docs independence disclosures'],
+  [docsJs.includes('IntersectionObserver') && docsCss.includes('.docs-sidebar'), 'Docs navigation and industrial visual system'],
+  [apiHandler.includes('handleImdRequest') && vercelConfig.includes('dist'), 'Vercel production IMD bridge and Vite output configuration'],
+]
+
+const failed = assertions.filter(([passed]) => !passed).map(([, label]) => label);
+if (failed.length) {
+  console.error(`Checks failed: ${failed.join(', ')}`);
+  process.exit(1);
+}
+
+console.log(`Checks passed: ${assertions.length} assertions, ${required.length} required files`);

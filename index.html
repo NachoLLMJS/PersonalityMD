@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Personality.md — virtual influencers designed through a real IMD request layer" />
+    <meta name="theme-color" content="#050505" />
+    <link rel="icon" href="/personality-mark.svg" type="image/svg+xml" />
+    <title>Personality.md</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#control-room" aria-label="Personality.md home"><span class="brand-mark" aria-hidden="true">◇</span><span class="brand-name">PERSONALITY.MD</span></a>
+      <nav class="desktop-nav" aria-label="Primary navigation"><a href="#explorer">EXPLORER</a><a href="#personalities">PERSONALITIES</a><a href="#swarm">SWARM</a><a href="#protocol">PROTOCOL</a><a href="/docs.html" target="_blank" rel="noopener noreferrer">DOCS</a></nav>
+      <div class="header-actions">
+        <a class="create-button" href="/create.html" target="_blank" rel="noopener noreferrer">CREATE</a>
+        <button class="connect-button" id="connectButton" type="button">CONNECT</button>
+      </div>
+    </header>
+
+    <main id="control-room">
+      <section class="control-room imd-room" aria-label="Personality.md IMD creator swarm control room">
+        <div class="machine-wall" aria-label="IMD machine wall adapted with blue indicators for Personality.md">
+          <img class="machine-wall-image" src="/imd-assets/wall-blue.png" width="2467" height="1031" alt="Dense IMD machine wall with blue indicators and inactive controls" />
+          <div class="terminal-window">
+            <div class="terminal-titlebar"><span>PERSONALITY.MD / IMD CREATOR SWARM</span><span class="terminal-id">NODE P-001 · DISPLAY MODE</span></div>
+            <div class="wall-status" aria-live="polite"><span><b id="onlineCount">128</b> agents ready</span><span><b id="creatingCount">12</b> identities operating</span><span>24h <b>4,821</b> creative steps</span><span><b>37</b> active campaigns</span><span class="status-ok">◆ system ready</span></div>
+            <div class="terminal-log" id="terminalLog" aria-live="polite">
+              <p><time>21:04</time> <em>mission</em> <span class="agent-glyph">⌬</span> <strong>personality_md</strong> routes influencer briefs to specialized IMD agents</p>
+              <p><time>21:05</time> <em>identity</em> <span class="agent-glyph">⟁</span> <strong>architect_agent</strong> defines voice values biography and memory</p>
+              <p><time>21:06</time> <em>visual</em> <span class="agent-glyph">⎔</span> <strong>director_agent</strong> maintains a coherent face wardrobe and visual world</p>
+              <p><time>21:07</time> <em>video</em> <span class="agent-glyph">⋈</span> <strong>media_swarm</strong> generates scripts scenes images voice and short form video</p>
+              <p><time>21:08</time> <em>social</em> <span class="agent-glyph">⟡</span> <strong>publisher_agent</strong> plans campaigns and coordinates distribution</p>
+              <p><time>21:09</time> <em>growth</em> <span class="agent-glyph">⊹</span> <strong>analyst_agent</strong> studies audience response and improves the next cycle</p>
+            </div>
+            <form class="command-line" id="personalityForm"><span class="prompt">›</span><label class="sr-only" for="personalityPrompt">Enter a decorative terminal command</label><input id="personalityPrompt" name="personality" autocomplete="off" maxlength="180" placeholder="terminal disabled · build personalities in explorer" required /><button type="submit">ENTER</button></form>
+            <div class="terminal-footer"><span>INPUT <b>DECORATIVE ONLY</b></span><span>CREATE REQUESTS IN EXPLORER</span><span id="lastUpdate">display live</span></div>
+          </div>
+        </div>
+        <div class="desk-scene" aria-hidden="true"><img class="desk-image" src="/imd-assets/desk.webp" width="3842" height="304" alt="" /><span class="pepe-sprite"></span><span class="crew-sprite"><span class="chair-sprite"></span></span><span class="dog-sprite"></span></div>
+      </section>
+
+      <section class="section explorer-section" id="explorer">
+        <div class="section-heading explorer-heading"><div><p class="eyebrow">LIVE REQUEST LAYER</p><h2>PERSONALITY EXPLORER</h2></div><p>Read real IMD work directly from the live network</p></div>
+        <div class="explorer-tabs" aria-label="Explorer view"><span class="explorer-tab active" id="liveTab">LIVE IMD JOBS</span></div>
+
+        <div class="explorer-panel active" id="livePanel" role="region" aria-labelledby="liveTab">
+          <div class="live-jobs-toolbar"><div><span class="live-pulse" aria-hidden="true"></span><b>REAL NETWORK ACTIVITY</b><small id="jobsUpdated">connecting to IMD</small></div><div class="job-filters" aria-label="Job filters"><button type="button" class="job-filter active" data-filter="all">ALL</button><button type="button" class="job-filter" data-filter="media">MEDIA</button><button type="button" class="job-filter" data-filter="active">ACTIVE</button><button type="button" id="refreshJobs">↻ REFRESH</button></div></div>
+          <div class="jobs-grid" id="jobsGrid" aria-live="polite"><div class="jobs-loading">⌬ READING LIVE IMD JOBS</div></div>
+          <p class="network-disclosure">Objectives states identifiers and timestamps come from the public IMD jobs API and are never invented by Personality.md</p>
+        </div>
+      </section>
+
+      <section class="section personality-index" id="personalities"><div class="section-heading"><div><p class="eyebrow">VIDEO GENERATION</p><h2>THE PERSONALITY INDEX</h2></div><p>Four vertical examples showing the kind of media a coherent virtual identity can publish</p></div><div class="identity-grid" id="identityGrid"></div></section>
+      <section class="section swarm-section" id="swarm">
+        <div class="section-heading"><div><p class="eyebrow">SPECIALIZED AGENTS</p><h2>ONE IDENTITY MANY OPERATORS</h2></div><p>The product coordinates separate IMD jobs instead of pretending one model can do everything</p></div>
+        <div class="swarm-diagram"><article class="swarm-node active"><span class="node-number">01</span><h3>IDENTITY ARCHITECT</h3><p>Defines character values biography boundaries and long term goals</p></article><article class="swarm-node"><span class="node-number">02</span><h3>VISUAL DIRECTOR</h3><p>Maintains a coherent face wardrobe environments and campaign language</p></article><article class="swarm-node"><span class="node-number">03</span><h3>CONTENT ROOM</h3><p>Writes posts scripts story arcs and channel specific publishing plans</p></article><article class="swarm-node"><span class="node-number">04</span><h3>POLICY GUARD</h3><p>Checks disclosure permissions impersonation risk and budget limits</p></article><article class="swarm-node"><span class="node-number">05</span><h3>GROWTH ANALYST</h3><p>Measures performance and sends evidence backed recommendations to the swarm</p></article></div>
+      </section>
+      <section class="section protocol-section" id="protocol">
+        <div class="protocol-copy"><p class="eyebrow">OPERATING LOOP</p><h2>FROM ONE BRIEF TO A LIVING DIGITAL IDENTITY</h2><ol class="protocol-steps"><li><span>01</span><div><b>DESCRIBE</b><p>Build the personality through structured visual and written direction</p></div></li><li><span>02</span><div><b>VALIDATE</b><p>Personality.md converts the form into a real IMD compatible objective</p></div></li><li><span>03</span><div><b>APPROVE</b><p>Review the exact identity outputs permissions and payment before admission</p></div></li><li><span>04</span><div><b>OPERATE</b><p>Specialized agents create monitor and improve the personality over time</p></div></li></ol></div>
+        <div class="protocol-console"><div class="protocol-console-head"><span>REQUEST STATUS</span><span>PAYMENT LOCKED</span></div><dl><div><dt>IDENTITY</dt><dd id="previewName">UNNAMED</dd></div><div><dt>VOICE</dt><dd id="previewVoice">NOT DEFINED</dd></div><div><dt>CHANNELS</dt><dd>VIDEO · IMAGES · SOCIAL</dd></div><div><dt>DISCLOSURE</dt><dd>AI GENERATED</dd></div><div><dt>IMD LAYER</dt><dd>LIVE CHECK AVAILABLE</dd></div><div><dt>STATE</dt><dd class="pending">AWAITING BRIEF</dd></div></dl><a id="draftButton" href="/create.html" target="_blank" rel="noopener noreferrer">OPEN CREATOR STUDIO</a></div>
+      </section>
+      <section class="section docs-section" id="docs"><p class="eyebrow">INDEPENDENT PRODUCT CONCEPT</p><h2>BUILT TO USE IMD — NOT TO IMPERSONATE IT</h2><p>Personality.md is an independent application layer using public IMD jobs and request validation with no official affiliation implied</p></section>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
