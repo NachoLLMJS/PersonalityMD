@@ -18,7 +18,7 @@ It is not an official IMD product
 - Operational documentation at `/docs.html`
 - Live IMD validation and quote creation
 - Explicit Ethereum Mainnet payment flow using IMD, x402 v2 and Permit2
-- Local image references that remain in the browser and block paid submission until IMD exposes a supported upload route
+- Original built in appearance selectors for build hairstyle and heritage
 
 ## Development
 
@@ -45,7 +45,7 @@ No private key, wallet seed, API key or permanent IMD credential is required by 
 - Payment terms are read from each live IMD quote
 - The x402 client allowlists only the quoted Ethereum Mainnet asset and caps it at the quoted atomic amount
 - Every approval and signature remains visible in the connected wallet
-- Local reference files disable quote and payment actions
+- Customer image upload is not exposed because IMD has no confirmed public attachment route
 
 ## Assets and provenance
 

@@ -19,8 +19,8 @@
       <section class="create-intro">
         <p class="eyebrow">ORIGINAL CHARACTER SYSTEM</p>
         <h1>BUILD A PERSONALITY</h1>
-        <p>Define a coherent virtual influencer through visual references personality direction and an IMD compatible production brief</p>
-        <div class="create-progress" aria-label="Creation steps"><span class="active">01 IDENTITY</span><span>02 APPEARANCE</span><span>03 REFERENCES</span><span>04 BEHAVIOR</span><span>05 OUTPUT</span></div>
+        <p>Define a coherent virtual influencer through original visual selectors personality direction and an IMD compatible production brief</p>
+        <div class="create-progress" aria-label="Creation steps"><span class="active">01 IDENTITY</span><span>02 APPEARANCE</span><span>03 BEHAVIOR</span><span>04 OUTPUT</span></div>
       </section>
 
       <form class="studio-grid" id="creatorForm">
@@ -75,18 +75,8 @@
             </div>
           </section>
 
-          <section class="studio-section reference-section" id="referenceStep">
-            <div class="studio-section-head"><span>03</span><div><h2>YOUR IMAGE REFERENCES</h2><p>Upload your own images to define the face wardrobe colors pose lighting or visual world of the creation</p></div></div>
-            <div class="reference-explainer"><div><span>01</span><b>ADD IMAGES</b><small>Choose up to 6 PNG JPEG or WEBP files</small></div><div><span>02</span><b>PREVIEW LOCALLY</b><small>Review and remove every image before validation</small></div><div><span>03</span><b>DESCRIBE THEIR USE</b><small>Explain exactly what the creation should preserve</small></div></div>
-            <label class="dark-upload"><input id="referenceFiles" type="file" accept="image/png,image/jpeg,image/webp" multiple /><span>⊕</span><b>UPLOAD IMAGE REFERENCES</b><small>Face identity outfit palette pose product location or art direction · maximum 6 images</small></label>
-            <div class="reference-count" id="referenceCount" aria-live="polite">0 / 6 REFERENCE IMAGES SELECTED</div>
-            <div class="local-files" id="localFiles"></div>
-            <label class="dark-field"><span>HOW SHOULD THESE REFERENCES BE USED</span><textarea name="referenceNotes" rows="4" maxlength="2000" placeholder="Example keep the facial structure from image 1 use the silver outfit from image 2 and use image 3 only for lighting and color"></textarea></label>
-            <p class="reference-boundary">Your images stay in this browser and remain part of the local creative brief · live IMD quote creation stays locked while local images are selected because its public customer request route does not currently accept direct image uploads</p>
-          </section>
-
           <section class="studio-section" id="behaviorStep">
-            <div class="studio-section-head"><span>04</span><div><h2>VOICE AND BEHAVIOR</h2><p>Define how the influencer communicates and what it must never do</p></div></div>
+            <div class="studio-section-head"><span>03</span><div><h2>VOICE AND BEHAVIOR</h2><p>Define how the influencer communicates and what it must never do</p></div></div>
             <div class="dark-fields cols-3">
               <label><span>ARCHETYPE</span><select name="archetype"><option>The Creator</option><option>The Explorer</option><option>The Sage</option><option>The Rebel</option><option>The Entertainer</option><option>The Caregiver</option><option>The Visionary</option></select></label>
               <label><span>TONE</span><select name="tone"><option>Warm and conversational</option><option>Sharp and analytical</option><option>Playful and chaotic</option><option>Calm and aspirational</option><option>Bold and provocative</option><option>Elegant and restrained</option><option>Direct and educational</option></select></label>
@@ -96,7 +86,7 @@
           </section>
 
           <section class="studio-section" id="outputStep">
-            <div class="studio-section-head"><span>05</span><div><h2>FIRST PRODUCTION</h2><p>Choose the first deliverable the IMD media chain should validate</p></div></div>
+            <div class="studio-section-head"><span>04</span><div><h2>FIRST PRODUCTION</h2><p>Choose the first deliverable the IMD media chain should validate</p></div></div>
             <div class="dark-output-options">
               <label><input type="radio" name="output" value="Identity portrait and 9:16 introduction video" checked /><span>⎔</span><b>PORTRAIT + VIDEO</b><small>Key art followed by one vertical introduction</small></label>
               <label><input type="radio" name="output" value="9:16 social video" /><span>⋈</span><b>VERTICAL VIDEO</b><small>One social ready short form video</small></label>
@@ -108,7 +98,7 @@
         <aside class="studio-console">
           <div class="studio-console-title"><span>PERSONALITY REQUEST</span><span>IMD LIVE</span></div>
           <div class="selected-preview" id="selectedPreview"><img src="/references/heritage-1.webp" alt="Selected heritage preview" /><div><small>SELECTED IDENTITY</small><b>UNNAMED</b><span>BLACK · SLIM · LAVENDER BOB</span></div></div>
-          <dl class="studio-facts"><div><dt>NICHE</dt><dd>NOT SELECTED</dd></div><div><dt>HERITAGE</dt><dd>BLACK</dd></div><div><dt>VOICE</dt><dd>WARM</dd></div><div><dt>OUTPUT</dt><dd>PORTRAIT + VIDEO</dd></div><div><dt>LOCAL FILES</dt><dd>0</dd></div></dl>
+          <dl class="studio-facts"><div><dt>NICHE</dt><dd>NOT SELECTED</dd></div><div><dt>HERITAGE</dt><dd>BLACK</dd></div><div><dt>VOICE</dt><dd>WARM</dd></div><div><dt>OUTPUT</dt><dd>PORTRAIT + VIDEO</dd></div></dl>
           <div class="studio-objective"><span>COMPOSED OBJECTIVE</span><p id="objectivePreview">Complete the identity fields to compose the IMD production objective</p></div>
           <div class="studio-validation" id="validationResult"><span>⌬</span><p>No validation has run</p></div>
           <button type="button" class="studio-validate" id="validateRequest">VALIDATE WITH LIVE IMD</button>

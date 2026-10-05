@@ -19,9 +19,6 @@ const objectivePreview = $('#objectivePreview')
 const validationResult = $('#validationResult')
 const validateButton = $('#validateRequest')
 const quoteButton = $('#createQuote')
-const localFilesElement = $('#localFiles')
-const fileInput = $('#referenceFiles')
-const referenceCount = $('#referenceCount')
 const toast = $('#toast')
 const preview = $('#selectedPreview')
 const paymentPanel = $('#paymentPanel')
@@ -31,7 +28,6 @@ const refreshPaymentStatusButton = $('#refreshPaymentStatus')
 const paymentJobLink = $('#paymentJobLink')
 const connectButton = $('#connectButton')
 
-let localFiles = []
 let checkedPayload = null
 let currentOrder = null
 let connectedAddress = null
@@ -67,10 +63,8 @@ function composeObjective(values) {
   const identity = values.brief ? `Identity brief ${stripStops(values.brief)}` : 'Create a coherent public identity with a distinct audience role and visual world'
   const voice = `Use ${values.archetype || 'The Creator'} as the archetype with a ${values.tone || 'Warm and conversational'} voice in ${values.language || 'English'}`
   const boundaries = values.boundaries ? `Values and boundaries ${stripStops(values.boundaries)}` : 'Always disclose that the personality is AI generated and never impersonate a real person'
-  const notes = values.referenceNotes ? `Additional visual direction ${stripStops(values.referenceNotes)}` : ''
-  const localReferenceSet = localFiles.length ? `Local creative brief contains ${localFiles.length} selected image references that must be used according to the visual direction before production submission` : ''
   const output = `First production ${values.output || 'Identity portrait and 9:16 introduction video'}`
-  return [`Create a coherent virtual influencer called ${name} for ${niche}`, appearance, identity, voice, boundaries, localReferenceSet, notes, output, 'Maintain the same recognizable identity across every image and video'].filter(Boolean).join(' — ')
+  return [`Create a coherent virtual influencer called ${name} for ${niche}`, appearance, identity, voice, boundaries, output, 'Maintain the same recognizable identity across every image and video'].filter(Boolean).join(' — ')
 }
 
 function buildInput(values) {
@@ -114,7 +108,6 @@ function updatePreview() {
   facts[1].textContent = clean(values.heritage || 'BLACK').toUpperCase()
   facts[2].textContent = clean(values.tone || 'WARM').toUpperCase()
   facts[3].textContent = shortOutput(values.output)
-  facts[4].textContent = String(localFiles.length)
   $('img', preview).src = selectedImage('heritage') || '/references/heritage-1.webp'
   $('b', preview).textContent = clean(values.displayName || 'UNNAMED').toUpperCase()
   $('span', preview).textContent = `${clean(values.heritage || 'Black')} · ${clean(values.build || 'Slim')} · ${clean(values.hairstyle || 'Lavender blunt bob')}`.toUpperCase()
@@ -128,46 +121,6 @@ function updatePreview() {
 
 form.addEventListener('input', updatePreview)
 form.addEventListener('change', updatePreview)
-
-function renderFiles() {
-  referenceCount.textContent = `${localFiles.length} / 6 REFERENCE IMAGES SELECTED`
-  referenceCount.classList.toggle('has-files', localFiles.length > 0)
-  localFilesElement.replaceChildren(...localFiles.map((file, index) => {
-    const card = document.createElement('div')
-    card.className = 'local-file'
-    const url = URL.createObjectURL(file)
-    const image = document.createElement('img')
-    image.src = url
-    image.alt = `Local reference ${index + 1}`
-    const remove = document.createElement('button')
-    remove.type = 'button'
-    remove.setAttribute('aria-label', `Remove local reference ${index + 1}`)
-    remove.textContent = '×'
-    const filename = document.createElement('span')
-    filename.textContent = clean(file.name)
-    card.replaceChildren(image, remove, filename)
-    image.addEventListener('load', () => URL.revokeObjectURL(url), { once: true })
-    remove.addEventListener('click', () => {
-      localFiles.splice(index, 1)
-      renderFiles()
-      updatePreview()
-    })
-    return card
-  }))
-}
-
-fileInput.addEventListener('change', () => {
-  const validTypes = new Set(['image/png', 'image/jpeg', 'image/webp'])
-  const selected = [...fileInput.files]
-  const valid = selected.filter((file) => validTypes.has(file.type) && file.size <= 8 * 1024 * 1024)
-  const remaining = Math.max(0, 6 - localFiles.length)
-  localFiles = [...localFiles, ...valid.slice(0, remaining)]
-  fileInput.value = ''
-  renderFiles()
-  updatePreview()
-  if (selected.length !== valid.length) showToast('Some images were skipped · use PNG JPEG or WEBP under 8 MB', 'red')
-  else if (valid.length > remaining) showToast('Reference limit reached · maximum 6 images', 'red')
-})
 
 function setValidation(status, message) {
   validationResult.className = `studio-validation ${status}`
@@ -199,8 +152,8 @@ async function validateRequest() {
     if (blockers.length) throw new Error(blockers.map((item) => item.detail || item.code || String(item)).join(' · '))
     const plan = Array.isArray(result.plan) ? result.plan.map((step) => step.title || step.skill).filter(Boolean).join(' → ') : 'IMD plan ready'
     checkedPayload = payload
-    quoteButton.disabled = localFiles.length > 0
-    setValidation('success', `${plan} · validation passed${localFiles.length ? ' · remove local files before quoting because IMD has no customer upload route' : ''}`)
+    quoteButton.disabled = false
+    setValidation('success', `${plan} · validation passed`)
   } catch (error) {
     setValidation('error', error.message)
   } finally {
@@ -251,7 +204,7 @@ function renderPaymentPanel() {
 }
 
 async function createQuote() {
-  if (!checkedPayload || localFiles.length) return
+  if (!checkedPayload) return
   quoteButton.disabled = true
   setValidation('loading', 'Saving a real unpaid IMD quote')
   try {
