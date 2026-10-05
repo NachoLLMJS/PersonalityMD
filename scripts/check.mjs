@@ -103,6 +103,9 @@ const assertions = [
   [docsHtml.includes('IMD INTEGRATION') && docsHtml.includes('QUOTES AND PAYMENT') && docsHtml.includes('ATTACHMENTS') && docsHtml.includes('CURRENT LIMITATIONS'), 'Docs covers integration payment files and limitations'],
   [docsHtml.includes('NO OFFICIAL IMD AFFILIATION') && docsHtml.includes('not an official IMD product'), 'Docs independence disclosures'],
   [docsJs.includes('IntersectionObserver') && docsCss.includes('.docs-sidebar'), 'Docs navigation and industrial visual system'],
+  [docsCss.includes('--header:56px') && docsCss.includes('--side:200px'), 'Docs uses official IMD header and contents rail proportions'],
+  [docsCss.includes('font-size:24px') && docsCss.includes('max-width:720px'), 'Docs uses official IMD documentation type scale and reading width'],
+  [docsCss.includes('font-size:13px') && docsCss.includes('line-height:1.5'), 'Docs uses official IMD body density'],
   [apiHandler.includes('handleImdRequest') && vercelConfig.includes('dist'), 'Vercel production IMD bridge and Vite output configuration'],
 ]
 

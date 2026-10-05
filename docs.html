@@ -56,7 +56,7 @@
           <h1>PERSONALITY.MD<br />DOCUMENTATION</h1>
           <p class="docs-lead">Personality.md is an independent application layer for designing virtual influencers and translating their creative specification into work that the IMD network can validate</p>
           <div class="docs-status-grid">
-            <div><span>PRODUCT STATE</span><b>LOCAL PROTOTYPE</b></div>
+            <div><span>PRODUCT STATE</span><b>PUBLIC BETA</b></div>
             <div><span>LIVE READS</span><b>IMD JOBS</b></div>
             <div><span>LIVE WRITES</span><b>CHECK + QUOTE + SUBMIT</b></div>
             <div><span>PAYMENT</span><b>WALLET CONFIRMATION</b></div>
@@ -95,14 +95,14 @@
               <i>→</i>
               <div><span>04</span><b>IMD CONTROL PLANE</b><small>Jobs check and quote endpoints</small></div>
             </div>
-            <div class="docs-callout warning"><b>PRODUCTION REQUIREMENT</b><p>The current same origin bridge is implemented as Vite development middleware A public deployment needs a persistent backend or serverless API implementing the same routes before live reads checks and quotes can work outside local development</p></div>
+            <div class="docs-callout"><b>PRODUCTION BRIDGE</b><p>The same origin bridge runs through a Vercel Function in production and through Vite middleware during local development Both environments reuse the same restricted request handler</p></div>
             <table class="docs-table">
               <thead><tr><th>LAYER</th><th>RESPONSIBILITY</th><th>CURRENT STATE</th></tr></thead>
               <tbody>
                 <tr><td>Landing</td><td>Product explanation live activity preview and media examples</td><td>Implemented</td></tr>
                 <tr><td>Explorer</td><td>Read real IMD jobs and filter network activity</td><td>Implemented</td></tr>
                 <tr><td>Creator</td><td>Build a structured influencer and validate the objective</td><td>Implemented</td></tr>
-                <tr><td>Bridge</td><td>Protect cross origin IMD routes behind same origin requests</td><td>Local development only</td></tr>
+                <tr><td>Bridge</td><td>Protect cross origin IMD routes behind same origin requests</td><td>Local and Vercel production</td></tr>
                 <tr><td>Payment client</td><td>Handle x402 challenge Permit2 approval two wallet signatures paid submit and status polling</td><td>Implemented</td></tr>
                 <tr><td>Persistence</td><td>Store user personalities files jobs and results</td><td>Not implemented</td></tr>
               </tbody>
@@ -158,7 +158,7 @@
             <p>The Creator Studio lives at <code>/create.html</code> and opens independently from the homepage so a user can build a personality without losing the Explorer state</p>
             <div class="step-list">
               <article><span>01</span><div><b>CORE IDENTITY</b><p>Display name niche audience purpose campaign direction and free form brief</p></div></article>
-              <article><span>02</span><div><b>APPEARANCE SYSTEM</b><p>Character type build hairstyle heritage age presentation and eye color</p></div></article>
+              <article><span>02</span><div><b>APPEARANCE SYSTEM</b><p>Build hairstyle heritage age presentation and eye color</p></div></article>
               <article><span>03</span><div><b>YOUR IMAGE REFERENCES</b><p>Up to six local images for face identity wardrobe palette pose product location lighting or art direction plus written instructions for how each reference should be used</p></div></article>
               <article><span>04</span><div><b>VOICE AND BEHAVIOR</b><p>Archetype tone language values forbidden topics and disclosure rules</p></div></article>
               <article><span>05</span><div><b>FIRST PRODUCTION</b><p>Portrait plus video vertical video or image reference pack</p></div></article>
@@ -199,7 +199,7 @@
             <p>The browser converts the form into one plain language production objective containing the following information</p>
             <ol>
               <li>Name and niche</li>
-              <li>Character type build heritage age presentation hairstyle and eye color</li>
+              <li>Build heritage age presentation hairstyle and eye color</li>
               <li>User supplied identity brief</li>
               <li>Archetype tone and language</li>
               <li>Values restrictions and disclosure requirements</li>
