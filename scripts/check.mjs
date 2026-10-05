@@ -79,6 +79,7 @@ const assertions = [
   [css.includes('prefers-reduced-motion'), 'reduced motion support'],
   [css.includes('z-index: 20'), 'desk characters layer above terminal'],
   [html.includes('href="/create.html"') && html.includes('target="_blank"'), 'header Create opens a new tab'],
+  [html.includes('class="twitter-button"') && html.includes('href="https://x.com/PMDeth"') && html.includes('>TWITTER</a>'), 'header Twitter button points to the official Personality.md X account'],
   [html.includes('href="/docs.html"') && html.includes('target="_blank"') && html.includes('rel="noopener noreferrer"'), 'header Docs opens a secure new tab'],
   [createHtml.includes('<title>Create · Personality.md</title>'), 'standalone creator page title'],
   [!createHtml.includes('CHARACTER TYPE') && !createHtml.includes('name="characterType"') && !createJs.includes("selectedImage('characterType')"), 'character type image selector removed completely'],

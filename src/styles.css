@@ -62,9 +62,11 @@ button { color: inherit; }
 .desktop-nav a { font-size: 11px; font-weight: 600; letter-spacing: .035em; transition: color .18s ease; }
 .desktop-nav a:hover, .desktop-nav a:focus-visible { color: var(--green); }
 .header-actions { display: flex; align-items: center; gap: 14px; margin-left: auto; }
-.connect-button, .create-button { height: 40px; background: transparent; border: 0; cursor: pointer; }
+.connect-button, .create-button, .twitter-button { height: 40px; background: transparent; border: 0; cursor: pointer; }
 .create-button { min-width: 88px; display: grid; place-items: center; padding: 0 16px; border: 1px solid var(--green); color: var(--green); font-size: 11px; font-weight: 600; letter-spacing: .08em; }
 .create-button:hover, .create-button:focus-visible { color: #fff; background: var(--green); }
+.twitter-button { min-width: 88px; display: grid; place-items: center; padding: 0 16px; border: 1px solid #d9d9d9; color: #fff; font-size: 11px; font-weight: 600; letter-spacing: .08em; }
+.twitter-button:hover, .twitter-button:focus-visible { color: #050505; background:#fff; }
 
 .connect-button { min-width: 94px; border: 1px solid var(--paper); font-size: 11px; font-weight: 600; letter-spacing: .08em; }
 .connect-button:hover, .connect-button:focus-visible { color: var(--black); background: var(--paper); }
@@ -322,6 +324,7 @@ h1 { margin: 0; font-size: clamp(30px, 4.2vw, 68px); line-height: .94; letter-sp
   .brand-name { padding-inline: 10px; font-size: 9px; }
   .header-actions { gap: 4px; }
 
+  .create-button,.twitter-button { min-width:62px; height:38px; padding:0 7px; font-size:8px; }
   .connect-button { min-width: 76px; height: 38px; font-size: 9px; }
   .control-room { height: 100svh; min-height: 760px; padding-top: var(--header-h); }
   .machine-wall { margin-inline: 0; }
