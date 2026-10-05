@@ -6,6 +6,12 @@
   "functions": {
     "api/imd/[...path].js": {
       "maxDuration": 30
+    },
+    "api/imd/orders/[id].js": {
+      "maxDuration": 30
+    },
+    "api/imd/orders/[id]/submit.js": {
+      "maxDuration": 30
     }
   }
 }

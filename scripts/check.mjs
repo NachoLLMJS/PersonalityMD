@@ -35,6 +35,8 @@ const required = [
   'server/imd-paid-routes.js',
   'server/imd-handler.js',
   'api/imd/[...path].js',
+  'api/imd/orders/[id].js',
+  'api/imd/orders/[id]/submit.js',
   'vercel.json',
   'scripts/payment.test.mjs',
   'docs.html',
@@ -50,7 +52,7 @@ const required = [
 
 await Promise.all(required.map((file) => access(resolve(root, file))));
 
-const [html, js, css, createHtml, createJs, createCss, docsHtml, docsJs, docsCss, explorerHtml, explorerJs, personalitiesHtml, personalitiesJs, apiHandler, vercelConfig, viteConfig] = await Promise.all([
+const [html, js, css, createHtml, createJs, createCss, docsHtml, docsJs, docsCss, explorerHtml, explorerJs, personalitiesHtml, personalitiesJs, apiHandler, orderApiHandler, submitApiHandler, vercelConfig, viteConfig] = await Promise.all([
   readFile(resolve(root, 'index.html'), 'utf8'),
   readFile(resolve(root, 'src/main.js'), 'utf8'),
   readFile(resolve(root, 'src/styles.css'), 'utf8'),
@@ -65,6 +67,8 @@ const [html, js, css, createHtml, createJs, createCss, docsHtml, docsJs, docsCss
   readFile(resolve(root, 'personalities.html'), 'utf8'),
   readFile(resolve(root, 'src/personalities.js'), 'utf8'),
   readFile(resolve(root, 'api/imd/[...path].js'), 'utf8'),
+  readFile(resolve(root, 'api/imd/orders/[id].js'), 'utf8'),
+  readFile(resolve(root, 'api/imd/orders/[id]/submit.js'), 'utf8'),
   readFile(resolve(root, 'vercel.json'), 'utf8'),
   readFile(resolve(root, 'vite.config.js'), 'utf8'),
 ]);
@@ -121,6 +125,8 @@ const assertions = [
   [docsCss.includes('font-size:24px') && docsCss.includes('max-width:720px'), 'Docs uses official IMD documentation type scale and reading width'],
   [docsCss.includes('font-size:13px') && docsCss.includes('line-height:1.5'), 'Docs uses official IMD body density'],
   [apiHandler.includes('handleImdRequest') && vercelConfig.includes('dist'), 'Vercel production IMD bridge and Vite output configuration'],
+  [orderApiHandler.includes('handleImdRequest') && submitApiHandler.includes('handleImdRequest'), 'explicit nested Vercel order status and submit functions'],
+  [vercelConfig.includes('api/imd/orders/[id].js') && vercelConfig.includes('api/imd/orders/[id]/submit.js'), 'Vercel config covers nested paid-order functions'],
 ]
 
 const failed = assertions.filter(([passed]) => !passed).map(([, label]) => label);
