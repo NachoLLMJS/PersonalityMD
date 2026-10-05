@@ -119,6 +119,8 @@ const assertions = [
   [createCss.includes('.payment-panel') && createCss.includes('.payment-button'), 'paid flow visual system'],
   [docsHtml.includes('<title>Docs · Personality.md</title>') && docsHtml.includes('COMPLETE PRODUCT MANUAL'), 'standalone complete Docs page'],
   [docsHtml.includes('IMD INTEGRATION') && docsHtml.includes('QUOTES AND PAYMENT') && docsHtml.includes('IMAGE UPLOADS') && docsHtml.includes('NOT AVAILABLE') && docsHtml.includes('CURRENT LIMITATIONS') && !docsHtml.includes('<h2>ATTACHMENTS</h2>'), 'Docs covers integration payment and the unavailable image upload boundary'],
+  [docsHtml.includes('<tr><td>Persistence</td><td>Recover the current IMD request token and active order within the browser session</td><td>Implemented</td></tr>') && !docsHtml.includes('Store user personalities files jobs and results</td><td>Not implemented'), 'Docs accurately mark implemented browser session persistence'],
+  [docsHtml.includes('NO PERSONALITY DATABASE') && docsHtml.includes('no user account database analytics pipeline cloud file storage or personality library'), 'Docs keep durable account and media storage limitations explicit'],
   [docsHtml.includes('NO OFFICIAL IMD AFFILIATION') && docsHtml.includes('not an official IMD product'), 'Docs independence disclosures'],
   [docsJs.includes('IntersectionObserver') && docsCss.includes('.docs-sidebar'), 'Docs navigation and industrial visual system'],
   [docsCss.includes('--header:56px') && docsCss.includes('--side:200px'), 'Docs uses official IMD header and contents rail proportions'],
