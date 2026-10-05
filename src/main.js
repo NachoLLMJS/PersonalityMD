@@ -18,18 +18,36 @@ function showToast(message, tone = 'blue') {
 }
 
 
-function addWrongCommand(command) {
+function addCreateCommand(command) {
   const line = document.createElement('p')
-  line.className = 'wrong-command'
+  line.className = 'create-command'
   const entered = safeText(command).slice(0, 44)
-  line.innerHTML = `<time>${new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date())}</time> <em>error</em> <span class="agent-glyph">⛌</span> <strong>WRONG COMMAND</strong>${entered ? ` <span class="command-echo">${entered}</span>` : ''}`
+  const time = document.createElement('time')
+  time.textContent = new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date())
+  const action = document.createElement('em')
+  action.textContent = 'action'
+  const glyph = document.createElement('span')
+  glyph.className = 'agent-glyph'
+  glyph.textContent = '◆'
+  const createLink = document.createElement('a')
+  createLink.href = '/create.html'
+  createLink.target = '_blank'
+  createLink.rel = 'noopener noreferrer'
+  createLink.textContent = 'GO TO CREATE'
+  line.append(time, ' ', action, ' ', glyph, ' ', createLink)
+  if (entered) {
+    const echo = document.createElement('span')
+    echo.className = 'command-echo'
+    echo.textContent = ` ${entered}`
+    line.append(echo)
+  }
   terminalLog.append(line)
   while (terminalLog.children.length > 6) terminalLog.firstElementChild.remove()
 }
 
 terminalForm.addEventListener('submit', (event) => {
   event.preventDefault()
-  addWrongCommand(terminalInput.value)
+  addCreateCommand(terminalInput.value)
   terminalInput.value = ''
 })
 
