@@ -4,6 +4,11 @@ Personality.md is an independent application layer for designing virtual influen
 
 It is not an official IMD product
 
+## Public links
+
+- Production: `https://personality-md.vercel.app`
+- Repository: `https://github.com/NachoLLMJS/PersonalityMD`
+
 ## Product surfaces
 
 - Industrial landing page with a live IMD jobs Explorer
