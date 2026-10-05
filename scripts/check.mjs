@@ -83,7 +83,7 @@ const assertions = [
   [html.includes('/imd-assets/wall-blue.png'), 'blue IMD wall asset'],
   [html.includes('No official affiliation') || html.includes('no official affiliation'), 'independence disclosure'],
   [js.includes('GO TO CREATE') && js.includes("createLink.href = '/create.html'") && js.includes("line.className = 'create-command'") && !js.includes('WRONG COMMAND') && !js.includes('wrong-command'), 'terminal returns a safe green Creator Studio link'],
-  [css.includes('.create-command') && css.includes('var(--green)') && docsHtml.includes('GO TO CREATE'), 'terminal Creator response is green and documented'],
+  [css.includes('.create-command') && css.includes('#55cf76') && docsHtml.includes('GO TO CREATE'), 'terminal Creator response is green and documented'],
   [explorerHtml.includes('<title>Explorer · Personality.md</title>') && explorerHtml.includes('LIVE IMD JOBS'), 'standalone Explorer page'],
   [explorerJs.includes("fetch('/api/imd/jobs") && !explorerJs.includes("fetch('/api/imd/check") && !explorerJs.includes("fetch('/api/imd/quote"), 'Explorer only reads live IMD jobs'],
   [personalitiesHtml.includes('<title>Personalities · Personality.md</title>') && personalitiesHtml.includes('THE PERSONALITY INDEX'), 'standalone Personalities page'],
