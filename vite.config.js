@@ -24,6 +24,8 @@ export default defineConfig({
         main: resolve(import.meta.dirname, 'index.html'),
         create: resolve(import.meta.dirname, 'create.html'),
         docs: resolve(import.meta.dirname, 'docs.html'),
+        explorer: resolve(import.meta.dirname, 'explorer.html'),
+        personalities: resolve(import.meta.dirname, 'personalities.html'),
       },
     },
   },

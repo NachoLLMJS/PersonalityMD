@@ -40,13 +40,17 @@ const required = [
   'docs.html',
   'src/docs.js',
   'src/docs.css',
+  'explorer.html',
+  'personalities.html',
+  'src/explorer.js',
+  'src/personalities.js',
   'public/references/PROVENANCE.md',
   ...['build', 'hair', 'heritage'].flatMap((group) => Array.from({ length: 7 }, (_, index) => `public/references/${group}-${index + 1}.webp`)),
 ];
 
 await Promise.all(required.map((file) => access(resolve(root, file))));
 
-const [html, js, css, createHtml, createJs, createCss, docsHtml, docsJs, docsCss, apiHandler, vercelConfig] = await Promise.all([
+const [html, js, css, createHtml, createJs, createCss, docsHtml, docsJs, docsCss, explorerHtml, explorerJs, personalitiesHtml, personalitiesJs, apiHandler, vercelConfig, viteConfig] = await Promise.all([
   readFile(resolve(root, 'index.html'), 'utf8'),
   readFile(resolve(root, 'src/main.js'), 'utf8'),
   readFile(resolve(root, 'src/styles.css'), 'utf8'),
@@ -56,23 +60,32 @@ const [html, js, css, createHtml, createJs, createCss, docsHtml, docsJs, docsCss
   readFile(resolve(root, 'docs.html'), 'utf8'),
   readFile(resolve(root, 'src/docs.js'), 'utf8'),
   readFile(resolve(root, 'src/docs.css'), 'utf8'),
+  readFile(resolve(root, 'explorer.html'), 'utf8'),
+  readFile(resolve(root, 'src/explorer.js'), 'utf8'),
+  readFile(resolve(root, 'personalities.html'), 'utf8'),
+  readFile(resolve(root, 'src/personalities.js'), 'utf8'),
   readFile(resolve(root, 'api/imd/[...path].js'), 'utf8'),
   readFile(resolve(root, 'vercel.json'), 'utf8'),
+  readFile(resolve(root, 'vite.config.js'), 'utf8'),
 ]);
 
 const assertions = [
   [html.includes('<title>Personality.md</title>'), 'exact browser title'],
   [html.includes('DISPLAY MODE'), 'decorative hero terminal label'],
-  [html.includes('href="#explorer"') && html.indexOf('href="#explorer"') < html.indexOf('href="#personalities"'), 'Explorer precedes Personalities'],
-  [html.includes('LIVE IMD JOBS') && !html.includes('BUILD A PERSONALITY') && !html.includes('id="builderPanel"'), 'main Explorer contains only live IMD jobs'],
+  [html.includes('href="/explorer.html"') && html.includes('href="/personalities.html"') && html.indexOf('href="/explorer.html"') < html.indexOf('href="/personalities.html"'), 'standalone Explorer precedes standalone Personalities'],
+  [html.includes('href="/explorer.html" target="_blank" rel="noopener noreferrer"') && html.includes('href="/personalities.html" target="_blank" rel="noopener noreferrer"'), 'Explorer and Personalities open securely in new tabs'],
+  [!html.includes('id="explorer"') && !html.includes('id="personalities"'), 'homepage no longer embeds Explorer or Personalities'],
   [!js.includes("const builderForm = $('#builderForm')") && !js.includes("selectExplorerTab('builder')"), 'main script contains no embedded builder logic'],
   [html.includes('/imd-assets/wall-blue.png'), 'blue IMD wall asset'],
   [html.includes('No official affiliation') || html.includes('no official affiliation'), 'independence disclosure'],
   [js.includes('WRONG COMMAND') && js.includes('wrong-command'), 'terminal always returns wrong command'],
-  [js.includes("fetch('/api/imd/jobs") && !js.includes("fetch('/api/imd/check") && !js.includes("fetch('/api/imd/quote"), 'main page only reads live IMD jobs'],
-  [(js.match(/\/videos\/personality-\d{2}\.mp4/g) || []).length === 4, 'four vertical video references'],
-  [js.includes("article.addEventListener('pointerenter', playVideo)"), 'hover video playback'],
-  [js.includes("article.addEventListener('pointerleave', resetVideo)"), 'hover video reset'],
+  [explorerHtml.includes('<title>Explorer · Personality.md</title>') && explorerHtml.includes('LIVE IMD JOBS'), 'standalone Explorer page'],
+  [explorerJs.includes("fetch('/api/imd/jobs") && !explorerJs.includes("fetch('/api/imd/check") && !explorerJs.includes("fetch('/api/imd/quote"), 'Explorer only reads live IMD jobs'],
+  [personalitiesHtml.includes('<title>Personalities · Personality.md</title>') && personalitiesHtml.includes('THE PERSONALITY INDEX'), 'standalone Personalities page'],
+  [(personalitiesJs.match(/\/videos\/personality-\d{2}\.mp4/g) || []).length === 4, 'four vertical video references'],
+  [personalitiesJs.includes("article.addEventListener('pointerenter', playVideo)"), 'hover video playback'],
+  [personalitiesJs.includes("article.addEventListener('pointerleave', resetVideo)"), 'hover video reset'],
+  [viteConfig.includes("explorer: resolve(import.meta.dirname, 'explorer.html')") && viteConfig.includes("personalities: resolve(import.meta.dirname, 'personalities.html')"), 'Vite emits Explorer and Personalities pages'],
   [css.includes('aspect-ratio: 9 / 16'), 'vertical video containers'],
   [css.includes('.explorer-section'), 'Explorer visual system'],
   [css.includes('@media (max-width: 680px)'), 'mobile breakpoint'],

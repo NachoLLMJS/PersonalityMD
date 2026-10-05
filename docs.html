@@ -99,8 +99,9 @@
             <table class="docs-table">
               <thead><tr><th>LAYER</th><th>RESPONSIBILITY</th><th>CURRENT STATE</th></tr></thead>
               <tbody>
-                <tr><td>Landing</td><td>Product explanation live activity preview and media examples</td><td>Implemented</td></tr>
-                <tr><td>Explorer</td><td>Read real IMD jobs and filter network activity</td><td>Implemented</td></tr>
+                <tr><td>Landing</td><td>Product explanation agent roles and operating loop</td><td>Implemented</td></tr>
+                <tr><td>Explorer</td><td>Standalone page for real IMD jobs and network filters</td><td>Implemented</td></tr>
+                <tr><td>Personalities</td><td>Standalone index of generated vertical media examples</td><td>Implemented</td></tr>
                 <tr><td>Creator</td><td>Build a structured influencer and validate the objective</td><td>Implemented</td></tr>
                 <tr><td>Bridge</td><td>Protect cross origin IMD routes behind same origin requests</td><td>Local and Vercel production</td></tr>
                 <tr><td>Payment client</td><td>Handle x402 challenge Permit2 approval two wallet signatures paid submit and status polling</td><td>Implemented</td></tr>
@@ -123,8 +124,8 @@
             <p>Influencer creation is intentionally moved away from the terminal and into the dedicated Creator Studio</p>
             <h3>Header behavior</h3>
             <ul>
-              <li>EXPLORER scrolls to live IMD activity</li>
-              <li>PERSONALITIES scrolls to video examples</li>
+              <li>EXPLORER opens <code>/explorer.html</code> in a new tab</li>
+              <li>PERSONALITIES opens <code>/personalities.html</code> in a new tab</li>
               <li>SWARM explains the agent roles</li>
               <li>PROTOCOL explains the operating loop</li>
               <li>DOCS opens this complete manual in a new tab</li>
@@ -139,7 +140,7 @@
           <div class="docs-section-body">
             <p class="docs-eyebrow">REAL NETWORK ACTIVITY</p>
             <h2>EXPLORER</h2>
-            <p>The Explorer reads public jobs from IMD through <code>GET /api/imd/jobs</code> and renders their real objective state identifier and update time</p>
+            <p>The standalone Explorer lives at <code>/explorer.html</code> reads public jobs from IMD through <code>GET /api/imd/jobs</code> and renders their real objective state identifier and update time</p>
             <div class="docs-columns">
               <div><h3>ALL</h3><p>Displays the current job page returned by IMD excluding oracle panel jobs</p></div>
               <div><h3>MEDIA</h3><p>Filters objectives and templates containing video image media audio creative content visual avatar character or influencer terms</p></div>
@@ -348,7 +349,7 @@
           <div class="docs-section-body">
             <p class="docs-eyebrow">PERSONALITY INDEX</p>
             <h2>MEDIA EXAMPLES</h2>
-            <p>The Personality Index contains four user supplied vertical videos stored locally under <code>public/videos</code></p>
+            <p>The standalone Personality Index lives at <code>/personalities.html</code> and contains four user supplied vertical videos stored locally under <code>public/videos</code></p>
             <ul>
               <li>Videos use a 9 by 16 display container</li>
               <li>Playback starts on pointer hover or keyboard focus</li>
@@ -482,7 +483,9 @@
             </div>
             <h3>Local routes</h3>
             <ul>
-              <li><code>http://127.0.0.1:4178/</code> landing and Explorer</li>
+              <li><code>http://127.0.0.1:4178/</code> landing page</li>
+              <li><code>http://127.0.0.1:4178/explorer.html</code> live IMD jobs Explorer</li>
+              <li><code>http://127.0.0.1:4178/personalities.html</code> Personality Index</li>
               <li><code>http://127.0.0.1:4178/create.html</code> Creator Studio</li>
               <li><code>http://127.0.0.1:4178/docs.html</code> complete documentation</li>
             </ul>
@@ -497,10 +500,14 @@
             <h2>IMPORTANT FILES</h2>
             <table class="docs-table file-table">
               <tbody>
-                <tr><td>index.html</td><td>Landing live IMD jobs Explorer and public product sections</td></tr>
+                <tr><td>index.html</td><td>Landing agent swarm protocol and public product sections</td></tr>
+                <tr><td>explorer.html</td><td>Standalone live IMD jobs Explorer</td></tr>
+                <tr><td>personalities.html</td><td>Standalone Personality Index and vertical media examples</td></tr>
                 <tr><td>create.html</td><td>Standalone influencer Creator Studio</td></tr>
                 <tr><td>docs.html</td><td>Complete product and integration documentation</td></tr>
-                <tr><td>src/main.js</td><td>Live IMD jobs Explorer decorative terminal videos and public interactions</td></tr>
+                <tr><td>src/main.js</td><td>Decorative terminal wallet connection and homepage interactions</td></tr>
+                <tr><td>src/explorer.js</td><td>Live IMD jobs reads filters refresh and safe rendering</td></tr>
+                <tr><td>src/personalities.js</td><td>Vertical video cards hover playback focus playback and reset</td></tr>
                 <tr><td>src/create.js</td><td>Standalone creator validation live quote wallet Permit2 x402 submit and admission polling</td></tr>
                 <tr><td>src/imd-payment.js</td><td>Canonical payment hashing quote approval types amount formatting and status labels</td></tr>
                 <tr><td>server/imd-paid-routes.js</td><td>Fail closed paid route mapping token validation and IMD request construction</td></tr>

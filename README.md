@@ -11,7 +11,9 @@ It is not an official IMD product
 
 ## Product surfaces
 
-- Industrial landing page with a live IMD jobs Explorer
+- Industrial landing page with agent roles and operating loop
+- Standalone live IMD jobs Explorer at `/explorer.html`
+- Standalone Personality Index at `/personalities.html`
 - Standalone Creator Studio at `/create.html`
 - Operational documentation at `/docs.html`
 - Live IMD validation and quote creation

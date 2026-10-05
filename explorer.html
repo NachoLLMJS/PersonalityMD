@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Personality.md Explorer — live public IMD network activity" />
+    <meta name="theme-color" content="#050505" />
+    <link rel="icon" href="/personality-mark.svg" type="image/svg+xml" />
+    <title>Explorer · Personality.md</title>
+  </head>
+  <body class="standalone-page explorer-page">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Personality.md home"><span class="brand-mark" aria-hidden="true">◇</span><span class="brand-name">PERSONALITY.MD</span></a>
+      <nav class="desktop-nav" aria-label="Primary navigation"><a href="/explorer.html" aria-current="page">EXPLORER</a><a href="/personalities.html" target="_blank" rel="noopener noreferrer">PERSONALITIES</a><a href="/docs.html" target="_blank" rel="noopener noreferrer">DOCS</a></nav>
+      <div class="header-actions"><a class="create-button" href="/create.html" target="_blank" rel="noopener noreferrer">CREATE</a><a class="twitter-button" href="https://x.com/PMDeth" target="_blank" rel="noopener noreferrer">TWITTER</a></div>
+    </header>
+    <main class="standalone-main">
+      <section class="section explorer-section standalone-section">
+        <div class="section-heading explorer-heading"><div><p class="eyebrow">LIVE REQUEST LAYER</p><h1>PERSONALITY EXPLORER</h1></div><p>Read real IMD work directly from the live network</p></div>
+        <div class="explorer-tabs" aria-label="Explorer view"><span class="explorer-tab active" id="liveTab">LIVE IMD JOBS</span></div>
+        <div class="explorer-panel active" role="region" aria-labelledby="liveTab">
+          <div class="live-jobs-toolbar"><div><span class="live-pulse" aria-hidden="true"></span><b>REAL NETWORK ACTIVITY</b><small id="jobsUpdated">connecting to IMD</small></div><div class="job-filters" aria-label="Job filters"><button type="button" class="job-filter active" data-filter="all">ALL</button><button type="button" class="job-filter" data-filter="media">MEDIA</button><button type="button" class="job-filter" data-filter="active">ACTIVE</button><button type="button" id="refreshJobs">↻ REFRESH</button></div></div>
+          <div class="jobs-grid" id="jobsGrid" aria-live="polite"><div class="jobs-loading">⌬ READING LIVE IMD JOBS</div></div>
+          <p class="network-disclosure">Objectives states identifiers and timestamps come from the public IMD jobs API and are never invented by Personality.md</p>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/src/explorer.js"></script>
+  </body>
+</html>
