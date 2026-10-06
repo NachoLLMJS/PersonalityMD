@@ -60,7 +60,7 @@ $('#connectButton').addEventListener('click', async () => {
   try {
     const [address] = await window.ethereum.request({ method: 'eth_requestAccounts' })
     $('#connectButton').textContent = `${address.slice(0, 5)}…${address.slice(-4)}`
-    showToast('Wallet connected locally · payment remains disabled')
+    showToast('Wallet connected · payment remains disabled')
   } catch {
     showToast('Wallet connection cancelled', 'red')
   }

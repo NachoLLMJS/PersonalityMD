@@ -37,8 +37,11 @@ const required = [
   'api/imd/[...path].js',
   'api/imd/orders/[id].js',
   'api/imd/orders/[id]/submit.js',
+  'api/higgsfield/[...path].js',
   'vercel.json',
   'scripts/payment.test.mjs',
+  'scripts/higgsfield.test.mjs',
+  'server/higgsfield-handler.js',
   'docs.html',
   'src/docs.js',
   'src/docs.css',
@@ -52,7 +55,7 @@ const required = [
 
 await Promise.all(required.map((file) => access(resolve(root, file))));
 
-const [html, js, css, createHtml, createJs, createCss, docsHtml, docsJs, docsCss, explorerHtml, explorerJs, personalitiesHtml, personalitiesJs, apiHandler, orderApiHandler, submitApiHandler, vercelConfig, viteConfig] = await Promise.all([
+const [html, js, css, createHtml, createJs, createCss, docsHtml, docsJs, docsCss, explorerHtml, explorerJs, personalitiesHtml, personalitiesJs, apiHandler, orderApiHandler, submitApiHandler, vercelConfig, viteConfig, higgsfieldServer, higgsfieldApiHandler] = await Promise.all([
   readFile(resolve(root, 'index.html'), 'utf8'),
   readFile(resolve(root, 'src/main.js'), 'utf8'),
   readFile(resolve(root, 'src/styles.css'), 'utf8'),
@@ -71,6 +74,8 @@ const [html, js, css, createHtml, createJs, createCss, docsHtml, docsJs, docsCss
   readFile(resolve(root, 'api/imd/orders/[id]/submit.js'), 'utf8'),
   readFile(resolve(root, 'vercel.json'), 'utf8'),
   readFile(resolve(root, 'vite.config.js'), 'utf8'),
+  readFile(resolve(root, 'server/higgsfield-handler.js'), 'utf8'),
+  readFile(resolve(root, 'api/higgsfield/[...path].js'), 'utf8'),
 ]);
 
 const assertions = [
@@ -118,6 +123,25 @@ const assertions = [
   [createJs.includes("fetch(`/api/imd/orders/${currentOrder.id}/submit`") && createJs.includes("fetch(`/api/imd/orders/${currentOrder.id}`"), 'paid submit and order polling routes'],
   [createJs.includes('eth_requestAccounts') && createJs.includes('wallet_switchEthereumChain') && createJs.includes('signTypedData'), 'wallet connection network switch and explicit signatures'],
   [createCss.includes('.payment-panel') && createCss.includes('.payment-button'), 'paid flow visual system'],
+  [createHtml.includes('id="selectHiggsfieldProvider"') && createHtml.includes('>SWARM</b>') && createHtml.includes('>HIGGSFIELD</b>') && createHtml.includes('id="verifyHolder"'), 'separate SWARM and Higgsfield creator modes'],
+  [createHtml.includes('class="creator-mode-tabs"') && createHtml.includes('id="higgsfieldView"') && createHtml.indexOf('id="higgsfieldView"') < createHtml.indexOf('id="creatorForm"'), 'Higgsfield and SWARM render as separate top-level creator tabs'],
+  [createHtml.includes('<small>IMAGE + MOTION TRANSFER + SWARM FAIRLAUNCH</small>'), 'Higgsfield tab names the SWARM fairlaunch handoff'],
+  [!createHtml.includes('<h1>BUILD A PERSONALITY</h1>') && !createHtml.includes('class="create-intro"') && createCss.includes('.studio-grid > .create-progress'), 'giant creator heading removed so the primary workspaces start higher'],
+  [createHtml.includes('class="creator-mode-tab active" id="selectHiggsfieldProvider"') && createHtml.includes('aria-pressed="true"') && createHtml.includes('class="studio-grid creator-view" id="creatorForm"') && createHtml.includes('aria-labelledby="selectImdProvider" hidden'), 'Create opens on the dedicated Higgsfield tab by default'],
+  [createJs.includes("let activeProvider = 'higgsfield'") && createJs.includes('higgsfieldView.hidden = !useHiggsfield') && createJs.includes('form.hidden = useHiggsfield'), 'provider switching toggles complete independent creator views'],
+  [createCss.includes('.higgsfield-workspace') && createCss.includes('.creator-mode-tabs') && createCss.includes('font-size:clamp(12px'), 'dedicated Higgsfield workspace uses larger legible typography'],
+  [createHtml.includes('CONTINUE TO SWARM MAINNET LAUNCH') && createHtml.includes('https://explorer.imd.fun/launch'), 'official SWARM Mainnet launch handoff'],
+  [createHtml.includes('id="higgsfieldImageInput"') && createHtml.includes('id="higgsfieldVideoInput"') && createHtml.includes('up to 5 seconds'), 'one image and one MP4 reference up to five seconds UI'],
+  [createJs.includes("fetch('/api/higgsfield/challenge'") && createJs.includes("fetch('/api/higgsfield/verify'") && createJs.includes("fetch('/api/higgsfield/upload-ticket'") && createJs.includes("startHiggsfieldJob('/api/higgsfield/generate-motion'"), 'signed holder gate direct upload and motion-transfer flow'],
+  [createJs.includes('duration <= 0') && createJs.includes('duration > 5.05') && createJs.includes("file.type !== 'video/mp4'"), 'browser rejects motion references over five seconds or non-MP4 files'],
+  [createJs.includes("method: 'personal_sign'") && createJs.includes('wallet_switchEthereumChain'), 'holder wallet ownership proof on Ethereum Mainnet'],
+  [!createJs.includes('HIGGSFIELD_API_KEY') && !createHtml.includes('HIGGSFIELD_API_KEY'), 'Higgsfield credential never enters client code'],
+  [higgsfieldServer.includes("join(homedir(), 'Desktop', 'PersonalityMD_HIGGSFIELD.env')") && higgsfieldServer.includes('verifyMessage') && higgsfieldServer.includes("functionName: 'balanceOf'") && higgsfieldServer.includes("functionName: 'decimals'"), 'external env signed ownership proof and exact onchain PMD gate'],
+  [higgsfieldServer.includes('files/generate-upload-url') && higgsfieldServer.includes('higgsfield/genjutsu/motion-transfer/v1.0'), 'official Higgsfield upload and Genjutsu motion-transfer endpoints'],
+  [higgsfieldServer.includes('validateMp4Duration(await downloadBuffer') && higgsfieldServer.includes('50 * 1024 * 1024'), 'server validates uploaded MP4 duration before generation'],
+  [viteConfig.includes("startsWith('/api/higgsfield/')") && vercelConfig.includes('api/higgsfield/[...path].js') && higgsfieldApiHandler.includes('handleHiggsfieldRequest') && higgsfieldServer.includes('signCapability'), 'Higgsfield bridge supports stateless Vercel production requests'],
+  [!createHtml.includes('LOCAL PREVIEW') && !createHtml.includes('local server') && !createJs.includes('HIGGSFIELD LOCAL') && !createJs.includes('Local Higgsfield') && !docsHtml.includes('LOCAL API'), 'production UI contains no local preview messaging'],
+  [createCss.includes('.higgsfield-panel') && createCss.includes('.generation-results') && createCss.includes('.creator-mode-tabs'), 'Higgsfield creator visual system'],
   [docsHtml.includes('<title>Docs · Personality.md</title>') && docsHtml.includes('COMPLETE PRODUCT MANUAL'), 'standalone complete Docs page'],
   [docsHtml.includes('IMD INTEGRATION') && docsHtml.includes('QUOTES AND PAYMENT') && docsHtml.includes('IMAGE UPLOADS') && docsHtml.includes('NOT AVAILABLE') && docsHtml.includes('CURRENT LIMITATIONS') && !docsHtml.includes('<h2>ATTACHMENTS</h2>'), 'Docs covers integration payment and the unavailable image upload boundary'],
   [docsHtml.includes('<tr><td>Persistence</td><td>Recover the current IMD request token and active order within the browser session</td><td>Implemented</td></tr>') && !docsHtml.includes('Store user personalities files jobs and results</td><td>Not implemented'), 'Docs accurately mark implemented browser session persistence'],

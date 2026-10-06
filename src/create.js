@@ -27,12 +27,43 @@ const paymentState = $('#paymentState')
 const refreshPaymentStatusButton = $('#refreshPaymentStatus')
 const paymentJobLink = $('#paymentJobLink')
 const connectButton = $('#connectButton')
+const imdFlow = $('#imdFlow')
+const higgsfieldFlow = $('#higgsfieldFlow')
+const higgsfieldView = $('#higgsfieldView')
+const providerState = $('#providerState')
+const outputStepCopy = $('#outputStepCopy')
+const swarmProgress = $('#swarmProgress')
+const selectImdProviderButton = $('#selectImdProvider')
+const selectHiggsfieldProviderButton = $('#selectHiggsfieldProvider')
+const verifyHolderButton = $('#verifyHolder')
+const generateInfluencerButton = $('#generateInfluencer')
+const holderStatus = $('#holderStatus')
+const holderMinimum = $('#holderMinimum')
+const generationProgress = $('#generationProgress')
+const imageGenerationState = $('#imageGenerationState')
+const videoGenerationState = $('#videoGenerationState')
+const generationResults = $('#generationResults')
+const generatedInfluencerImage = $('#generatedInfluencerImage')
+const generatedInfluencerVideo = $('#generatedInfluencerVideo')
+const swarmLaunch = $('#swarmLaunch')
+const higgsfieldImageInput = $('#higgsfieldImageInput')
+const higgsfieldVideoInput = $('#higgsfieldVideoInput')
+const higgsfieldImageName = $('#higgsfieldImageName')
+const higgsfieldVideoName = $('#higgsfieldVideoName')
+const higgsfieldMotionPrompt = $('#higgsfieldMotionPrompt')
 
 let checkedPayload = null
 let currentOrder = null
 let connectedAddress = null
 let paymentMode = 'connect'
 let paymentBusy = false
+let activeProvider = 'higgsfield'
+let higgsfieldSessionToken = null
+let higgsfieldConfig = null
+let higgsfieldBusy = false
+let higgsfieldImageFile = null
+let higgsfieldVideoFile = null
+let higgsfieldImagePreviewUrl = null
 
 const stripStops = (value = '') => String(value).replaceAll('.', '').trim()
 const clean = (value = '') => stripStops(value).replace(/\s+/g, ' ')
@@ -136,6 +167,240 @@ async function responseJson(response) {
 function resultError(result, response) {
   const problem = Array.isArray(result?.problems) ? result.problems.map((item) => item.detail || item.code || String(item)).join(' · ') : ''
   return result?.detail || result?.message || problem || result?.error || `IMD returned ${response.status}`
+}
+
+function setProvider(provider) {
+  activeProvider = provider
+  const useHiggsfield = provider === 'higgsfield'
+  higgsfieldView.hidden = !useHiggsfield
+  form.hidden = useHiggsfield
+  swarmProgress.hidden = useHiggsfield
+  imdFlow.hidden = useHiggsfield
+  higgsfieldFlow.hidden = !useHiggsfield
+  providerState.textContent = useHiggsfield ? 'HIGGSFIELD LIVE' : 'SWARM LIVE'
+  outputStepCopy.textContent = useHiggsfield ? 'Upload one identity image and one MP4 motion reference up to 5 seconds' : 'Choose the first deliverable the IMD media chain should validate'
+  selectImdProviderButton.classList.toggle('active', !useHiggsfield)
+  selectHiggsfieldProviderButton.classList.toggle('active', useHiggsfield)
+  selectImdProviderButton.setAttribute('aria-pressed', String(!useHiggsfield))
+  selectHiggsfieldProviderButton.setAttribute('aria-pressed', String(useHiggsfield))
+  if (useHiggsfield && !higgsfieldConfig) loadHiggsfieldConfig()
+}
+
+function setHolderStatus(status, message) {
+  holderStatus.className = `holder-status ${status || ''}`.trim()
+  replaceStatusContent(holderStatus, status === 'success' ? '◆' : status === 'loading' ? '⌬' : status === 'error' ? '⛌' : '◇', message)
+}
+
+async function loadHiggsfieldConfig() {
+  try {
+    const response = await fetch('/api/higgsfield/config', { headers: { accept: 'application/json' } })
+    const result = await responseJson(response)
+    if (!response.ok) throw new Error(result.error || 'Higgsfield service is unavailable')
+    higgsfieldConfig = result
+    holderMinimum.textContent = `${new Intl.NumberFormat('en-US').format(Number(result.minimum))} PMD`
+    swarmLaunch.href = result.launcherUrl
+  } catch (error) {
+    setHolderStatus('error', error.message)
+    verifyHolderButton.disabled = true
+  }
+}
+
+function higgsfieldHeaders(extra = {}) {
+  if (!higgsfieldSessionToken) throw new Error('Verify an eligible PMD holder wallet first')
+  return { authorization: `Bearer ${higgsfieldSessionToken}`, ...extra }
+}
+
+async function verifyHolderAccess() {
+  if (higgsfieldBusy) return
+  higgsfieldBusy = true
+  verifyHolderButton.disabled = true
+  generateInfluencerButton.disabled = true
+  higgsfieldSessionToken = null
+  try {
+    const address = await ensureWallet()
+    setHolderStatus('loading', 'Preparing a one-time wallet ownership challenge')
+    const challengeResponse = await fetch('/api/higgsfield/challenge', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ address }),
+    })
+    const challenge = await responseJson(challengeResponse)
+    if (!challengeResponse.ok) throw new Error(challenge.error || 'Could not create the holder challenge')
+    setHolderStatus('loading', 'Sign the read-only message in your wallet · no transaction or payment')
+    const signature = await window.ethereum.request({ method: 'personal_sign', params: [challenge.message, address] })
+    const verifyResponse = await fetch('/api/higgsfield/verify', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ address, signature, challengeToken: challenge.challengeToken }),
+    })
+    const result = await responseJson(verifyResponse)
+    if (!verifyResponse.ok) {
+      if (result.eligible === false) throw new Error(`Wallet holds ${result.balance || '0'} PMD · ${result.minimum || '100000'} required`)
+      throw new Error(result.error || 'Holder verification failed')
+    }
+    higgsfieldSessionToken = result.token
+    higgsfieldImageInput.disabled = false
+    higgsfieldVideoInput.disabled = false
+    updateHiggsfieldAvailability()
+    setHolderStatus('success', `Eligible holder confirmed · ${result.balance} PMD · select one image and one MP4 up to 5 seconds`)
+    showToast('Higgsfield creator unlocked')
+  } catch (error) {
+    setHolderStatus('error', error.message)
+    showToast(error.message, 'red')
+  } finally {
+    verifyHolderButton.disabled = false
+    higgsfieldBusy = false
+  }
+}
+
+function updateHiggsfieldAvailability() {
+  const ready = Boolean(higgsfieldSessionToken && higgsfieldImageFile && higgsfieldVideoFile && !higgsfieldBusy)
+  generateInfluencerButton.disabled = !ready
+}
+
+function validateReferenceImage(file) {
+  if (!file) throw new Error('Select one identity image')
+  if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type)) throw new Error('Identity image must be JPG PNG WEBP or GIF')
+  if (file.size > 15 * 1024 * 1024) throw new Error('Identity image must be 15 MB or smaller')
+  return file
+}
+
+async function readVideoDuration(file) {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement('video')
+    const url = URL.createObjectURL(file)
+    const finish = () => URL.revokeObjectURL(url)
+    video.preload = 'metadata'
+    video.onloadedmetadata = () => { const duration = video.duration; finish(); resolve(duration) }
+    video.onerror = () => { finish(); reject(new Error('Could not read the reference video')) }
+    video.src = url
+  })
+}
+
+async function validateReferenceVideo(file) {
+  if (!file) throw new Error('Select one motion reference video')
+  if (file.type !== 'video/mp4') throw new Error('Motion reference must be MP4')
+  if (file.size > 50 * 1024 * 1024) throw new Error('Motion reference must be 50 MB or smaller')
+  const duration = await readVideoDuration(file)
+  if (!Number.isFinite(duration) || duration <= 0 || duration > 5.05) throw new Error('Motion reference must be no longer than 5 seconds')
+  return file
+}
+
+async function selectHiggsfieldImage() {
+  try {
+    higgsfieldImageFile = validateReferenceImage(higgsfieldImageInput.files?.[0])
+    higgsfieldImageName.textContent = higgsfieldImageFile.name
+    if (higgsfieldImagePreviewUrl) URL.revokeObjectURL(higgsfieldImagePreviewUrl)
+    higgsfieldImagePreviewUrl = URL.createObjectURL(higgsfieldImageFile)
+    generatedInfluencerImage.src = higgsfieldImagePreviewUrl
+    setHolderStatus('success', 'Identity image ready · add one MP4 motion reference up to 5 seconds')
+  } catch (error) {
+    higgsfieldImageFile = null
+    higgsfieldImageInput.value = ''
+    higgsfieldImageName.textContent = 'SELECT ONE IMAGE'
+    setHolderStatus('error', error.message)
+  }
+  updateHiggsfieldAvailability()
+}
+
+async function selectHiggsfieldVideo() {
+  try {
+    higgsfieldVideoFile = await validateReferenceVideo(higgsfieldVideoInput.files?.[0])
+    higgsfieldVideoName.textContent = higgsfieldVideoFile.name
+    setHolderStatus('success', 'Image and motion reference are ready')
+  } catch (error) {
+    higgsfieldVideoFile = null
+    higgsfieldVideoInput.value = ''
+    higgsfieldVideoName.textContent = 'SELECT ONE MP4'
+    setHolderStatus('error', error.message)
+  }
+  updateHiggsfieldAvailability()
+}
+
+async function uploadHiggsfieldReference(file, kind) {
+  const response = await fetch('/api/higgsfield/upload-ticket', {
+    method: 'POST',
+    headers: higgsfieldHeaders({ 'content-type': 'application/json' }),
+    body: JSON.stringify({ kind, contentType: file.type, size: file.size }),
+  })
+  const result = await responseJson(response)
+  if (!response.ok || !result.uploadUrl || !result.publicUrl || !result.receipt) throw new Error(result.error || `Could not prepare the ${kind} reference upload`)
+  const stored = await fetch(result.uploadUrl, { method: 'PUT', headers: result.uploadHeaders || { 'Content-Type': file.type }, body: file, credentials: 'omit' })
+  if (!stored.ok) throw new Error(`Could not upload the ${kind} reference`)
+  return { publicUrl: result.publicUrl, receipt: result.receipt }
+}
+
+async function startHiggsfieldJob(route, payload) {
+  const response = await fetch(route, {
+    method: 'POST',
+    headers: higgsfieldHeaders({ 'content-type': 'application/json' }),
+    body: JSON.stringify(payload),
+  })
+  const result = await responseJson(response)
+  if (!response.ok || !result.requestId || !result.jobToken) throw new Error(result.error || 'Higgsfield did not return a job id')
+  return result
+}
+
+async function pollHiggsfieldJob(jobToken, onStatus) {
+  for (let attempt = 0; attempt < 120; attempt += 1) {
+    if (attempt) await delay(2000)
+    const response = await fetch(`/api/higgsfield/status?job=${encodeURIComponent(jobToken)}`, { headers: higgsfieldHeaders() })
+    const result = await responseJson(response)
+    if (!response.ok) throw new Error(result.error || 'Could not read Higgsfield job status')
+    const status = String(result.status || 'processing').toLowerCase()
+    onStatus(status)
+    if (status === 'completed') return result
+    if (['failed', 'cancelled', 'canceled'].includes(status)) throw new Error(result.error || 'Higgsfield generation failed')
+  }
+  throw new Error('Higgsfield generation is still running · try again shortly')
+}
+
+async function generateHiggsfieldInfluencer() {
+  if (higgsfieldBusy || !higgsfieldSessionToken) return
+  const imageFile = validateReferenceImage(higgsfieldImageFile)
+  const videoFile = await validateReferenceVideo(higgsfieldVideoFile)
+  higgsfieldBusy = true
+  generateInfluencerButton.disabled = true
+  verifyHolderButton.disabled = true
+  higgsfieldImageInput.disabled = true
+  higgsfieldVideoInput.disabled = true
+  generationProgress.hidden = false
+  generationResults.hidden = true
+  swarmLaunch.hidden = true
+  generatedInfluencerVideo.removeAttribute('src')
+  try {
+    imageGenerationState.textContent = 'UPLOADING REFERENCES'
+    videoGenerationState.textContent = 'MOTION WAITING'
+    const [imageReference, videoReference] = await Promise.all([
+      uploadHiggsfieldReference(imageFile, 'image'),
+      uploadHiggsfieldReference(videoFile, 'video'),
+    ])
+    imageGenerationState.textContent = 'REFERENCES READY'
+    videoGenerationState.textContent = 'MOTION SUBMITTING'
+    const job = await startHiggsfieldJob('/api/higgsfield/generate-motion', {
+      prompt: higgsfieldMotionPrompt.value.trim(),
+      imageReceipt: imageReference.receipt,
+      videoReceipt: videoReference.receipt,
+    })
+    const result = await pollHiggsfieldJob(job.jobToken, (status) => { videoGenerationState.textContent = `MOTION ${status.toUpperCase()}` })
+    const outputUrl = result.video?.url
+    if (!outputUrl) throw new Error('Higgsfield completed without a video URL')
+    generatedInfluencerVideo.src = outputUrl
+    videoGenerationState.textContent = 'MOTION COMPLETE'
+    generationResults.hidden = false
+    swarmLaunch.hidden = false
+    setHolderStatus('success', 'Higgsfield motion transfer complete · SWARM launch is now available')
+    showToast('Higgsfield video ready · SWARM launch unlocked')
+  } catch (error) {
+    setHolderStatus('error', error.message)
+    showToast(error.message, 'red')
+  } finally {
+    verifyHolderButton.disabled = false
+    higgsfieldImageInput.disabled = !higgsfieldSessionToken
+    higgsfieldVideoInput.disabled = !higgsfieldSessionToken
+    higgsfieldBusy = false
+    updateHiggsfieldAvailability()
+  }
 }
 
 async function validateRequest() {
@@ -412,6 +677,12 @@ validateButton.addEventListener('click', validateRequest)
 quoteButton.addEventListener('click', createQuote)
 paymentButton.addEventListener('click', handlePaymentButton)
 refreshPaymentStatusButton.addEventListener('click', () => fetchPaymentStatus().catch((error) => setValidation('error', error.message)))
+selectImdProviderButton.addEventListener('click', () => setProvider('imd'))
+selectHiggsfieldProviderButton.addEventListener('click', () => setProvider('higgsfield'))
+verifyHolderButton.addEventListener('click', verifyHolderAccess)
+generateInfluencerButton.addEventListener('click', generateHiggsfieldInfluencer)
+higgsfieldImageInput.addEventListener('change', selectHiggsfieldImage)
+higgsfieldVideoInput.addEventListener('change', selectHiggsfieldVideo)
 connectButton.addEventListener('click', async () => {
   try {
     await ensureWallet()
@@ -426,14 +697,25 @@ if (window.ethereum?.on) {
   window.ethereum.on('accountsChanged', ([address]) => {
     connectedAddress = address ? getAddress(address) : null
     connectButton.textContent = connectedAddress ? shortAddress(connectedAddress) : 'CONNECT'
+    higgsfieldSessionToken = null
+    higgsfieldImageInput.disabled = true
+    higgsfieldVideoInput.disabled = true
+    generateInfluencerButton.disabled = true
+    if (activeProvider === 'higgsfield') setHolderStatus('', 'Wallet changed · verify the 100K PMD holding again')
     if (currentOrder) refreshPaymentAction().catch((error) => setValidation('error', error.message))
   })
   window.ethereum.on('chainChanged', () => {
+    higgsfieldSessionToken = null
+    higgsfieldImageInput.disabled = true
+    higgsfieldVideoInput.disabled = true
+    generateInfluencerButton.disabled = true
+    if (activeProvider === 'higgsfield') setHolderStatus('', 'Network changed · switch to Ethereum Mainnet and verify again')
     if (currentOrder && connectedAddress) setPaymentButton('connect', 'SWITCH TO ETHEREUM MAINNET')
   })
 }
 
 const savedOrderId = sessionStorage.getItem('personalityImdOrderId')
 updatePreview()
+setProvider('higgsfield')
 if (savedOrderId) sessionStorage.setItem('personalityImdOrderId', savedOrderId)
 restoreOrder()

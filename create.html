@@ -16,14 +16,55 @@
     </header>
 
     <main class="create-shell">
-      <section class="create-intro">
-        <p class="eyebrow">ORIGINAL CHARACTER SYSTEM</p>
-        <h1>BUILD A PERSONALITY</h1>
-        <p>Define a coherent virtual influencer through original visual selectors personality direction and an IMD compatible production brief</p>
-        <div class="create-progress" aria-label="Creation steps"><span class="active">01 IDENTITY</span><span>02 APPEARANCE</span><span>03 BEHAVIOR</span><span>04 OUTPUT</span></div>
+      <div class="creator-mode-tabs" role="tablist" aria-label="Creator mode">
+        <button type="button" class="creator-mode-tab active" id="selectHiggsfieldProvider" role="tab" aria-controls="higgsfieldView" aria-pressed="true"><span>01</span><b>HIGGSFIELD</b><small>IMAGE + MOTION TRANSFER + SWARM FAIRLAUNCH</small></button>
+        <button type="button" class="creator-mode-tab" id="selectImdProvider" role="tab" aria-controls="creatorForm" aria-pressed="false"><span>02</span><b>SWARM</b><small>ORIGINAL IMD CREATOR</small></button>
+      </div>
+
+      <section class="creator-view higgsfield-view" id="higgsfieldView" role="tabpanel" aria-labelledby="selectHiggsfieldProvider">
+        <div class="higgsfield-workspace">
+          <div class="higgsfield-intro-panel">
+            <p class="higgsfield-kicker">DEFAULT CREATION MODE</p>
+            <h2>TRANSFER REAL MOTION TO ONE IDENTITY</h2>
+            <p class="higgsfield-lead">Upload one identity image and one MP4 motion reference up to 5 seconds. Genjutsu Motion Transfer keeps the selected identity while applying the movement from your video</p>
+            <ol class="higgsfield-steps">
+              <li><span>01</span><div><b>VERIFY</b><small>Connect an eligible Ethereum wallet holding at least 100,000 PMD</small></div></li>
+              <li><span>02</span><div><b>ADD REFERENCES</b><small>Select one identity image and one short MP4 motion clip</small></div></li>
+              <li><span>03</span><div><b>GENERATE</b><small>Create the motion transfer and continue to the official SWARM launcher</small></div></li>
+            </ol>
+          </div>
+          <section class="higgsfield-panel" id="higgsfieldFlow" aria-live="polite">
+            <div class="higgsfield-head"><span>HOLDER CREATOR</span><b>LIVE API</b></div>
+            <dl class="higgsfield-facts">
+              <div><dt>GATE</dt><dd id="holderMinimum">100,000 PMD</dd></div>
+              <div><dt>CHAIN</dt><dd>ETHEREUM MAINNET</dd></div>
+              <div><dt>IMAGE</dt><dd>ONE USER REFERENCE</dd></div>
+              <div><dt>VIDEO</dt><dd>GENJUTSU MOTION</dd></div>
+            </dl>
+            <div class="holder-status" id="holderStatus"><span>◇</span><p>Connect and sign a read-only holder challenge. No transaction or payment is requested.</p></div>
+            <button type="button" class="holder-button" id="verifyHolder">VERIFY 100K PMD HOLDING</button>
+            <div class="reference-upload-grid">
+              <label class="reference-upload"><span>IDENTITY IMAGE</span><input type="file" id="higgsfieldImageInput" accept="image/jpeg,image/png,image/webp,image/gif" disabled /><b id="higgsfieldImageName">SELECT ONE IMAGE</b><small>JPG PNG WEBP or GIF · max 15 MB</small></label>
+              <label class="reference-upload"><span>MOTION VIDEO</span><input type="file" id="higgsfieldVideoInput" accept="video/mp4" disabled /><b id="higgsfieldVideoName">SELECT ONE MP4</b><small>up to 5 seconds · max 50 MB</small></label>
+            </div>
+            <label class="motion-prompt"><span>MOTION INSTRUCTIONS <small>OPTIONAL</small></span><textarea id="higgsfieldMotionPrompt" rows="3" maxlength="10000" placeholder="Keep the same identity and transfer the reference movement"></textarea></label>
+            <button type="button" class="higgsfield-generate" id="generateInfluencer" disabled>GENERATE WITH HIGGSFIELD</button>
+            <div class="generation-progress" id="generationProgress" hidden>
+              <div><span>01</span><b id="imageGenerationState">REFERENCES WAITING</b></div>
+              <div><span>02</span><b id="videoGenerationState">MOTION WAITING</b></div>
+            </div>
+            <div class="generation-results" id="generationResults" hidden>
+              <figure><img id="generatedInfluencerImage" alt="Uploaded influencer identity reference" /></figure>
+              <video id="generatedInfluencerVideo" controls playsinline preload="metadata"></video>
+            </div>
+            <a class="swarm-launch" id="swarmLaunch" href="https://explorer.imd.fun/launch" target="_blank" rel="noopener noreferrer" hidden>CONTINUE TO SWARM MAINNET LAUNCH ↗</a>
+            <p class="higgsfield-boundary">Higgsfield Genjutsu transfers movement from the selected MP4 of up to 5 seconds to the selected identity image. Eligibility is read from PMD on Ethereum Mainnet. The API credential remains protected server-side. Launching opens the official SWARM flow and never starts a transaction automatically.</p>
+          </section>
+        </div>
       </section>
 
-      <form class="studio-grid" id="creatorForm">
+      <form class="studio-grid creator-view" id="creatorForm" role="tabpanel" aria-labelledby="selectImdProvider" hidden>
+        <div class="create-progress" id="swarmProgress" aria-label="SWARM creation steps"><span class="active">01 IDENTITY</span><span>02 APPEARANCE</span><span>03 BEHAVIOR</span><span>04 OUTPUT</span></div>
         <div class="studio-form">
           <section class="studio-section" id="identityStep">
             <div class="studio-section-head"><span>01</span><div><h2>CORE IDENTITY</h2><p>Start with the role audience and purpose of the influencer</p></div></div>
@@ -86,7 +127,7 @@
           </section>
 
           <section class="studio-section" id="outputStep">
-            <div class="studio-section-head"><span>04</span><div><h2>FIRST PRODUCTION</h2><p>Choose the first deliverable the IMD media chain should validate</p></div></div>
+            <div class="studio-section-head"><span>04</span><div><h2>FIRST PRODUCTION</h2><p id="outputStepCopy">Choose the first deliverable the IMD media chain should validate</p></div></div>
             <div class="dark-output-options">
               <label><input type="radio" name="output" value="Identity portrait and 9:16 introduction video" checked /><span>⎔</span><b>PORTRAIT + VIDEO</b><small>Key art followed by one vertical introduction</small></label>
               <label><input type="radio" name="output" value="9:16 social video" /><span>⋈</span><b>VERTICAL VIDEO</b><small>One social ready short form video</small></label>
@@ -96,29 +137,31 @@
         </div>
 
         <aside class="studio-console">
-          <div class="studio-console-title"><span>PERSONALITY REQUEST</span><span>IMD LIVE</span></div>
+          <div class="studio-console-title"><span>PERSONALITY REQUEST</span><span id="providerState">SWARM LIVE</span></div>
           <div class="selected-preview" id="selectedPreview"><img src="/references/heritage-1.webp" alt="Selected heritage preview" /><div><small>SELECTED IDENTITY</small><b>UNNAMED</b><span>BLACK · SLIM · LAVENDER BOB</span></div></div>
           <dl class="studio-facts"><div><dt>NICHE</dt><dd>NOT SELECTED</dd></div><div><dt>HERITAGE</dt><dd>BLACK</dd></div><div><dt>VOICE</dt><dd>WARM</dd></div><div><dt>OUTPUT</dt><dd>PORTRAIT + VIDEO</dd></div></dl>
-          <div class="studio-objective"><span>COMPOSED OBJECTIVE</span><p id="objectivePreview">Complete the identity fields to compose the IMD production objective</p></div>
-          <div class="studio-validation" id="validationResult"><span>⌬</span><p>No validation has run</p></div>
-          <button type="button" class="studio-validate" id="validateRequest">VALIDATE WITH LIVE IMD</button>
-          <button type="button" class="studio-quote" id="createQuote" disabled>CREATE IMD QUOTE</button>
-          <section class="payment-panel" id="paymentPanel" hidden aria-live="polite">
-            <div class="payment-panel-head"><span>REAL IMD PAYMENT</span><b id="paymentState">QUOTE READY</b></div>
-            <dl class="payment-facts">
-              <div><dt>PRICE</dt><dd id="paymentPrice">—</dd></div>
-              <div><dt>NETWORK</dt><dd id="paymentNetwork">—</dd></div>
-              <div><dt>ASSET</dt><dd id="paymentAsset">—</dd></div>
-              <div><dt>RECIPIENT</dt><dd id="paymentRecipient">—</dd></div>
-              <div><dt>EXPIRES</dt><dd id="paymentExpiry">—</dd></div>
-              <div><dt>ORDER</dt><dd id="paymentOrder">—</dd></div>
-            </dl>
-            <p class="payment-disclosure">The wallet will show every approval and signature before IMD can charge anything · payment buys admission to the job and does not guarantee the final result</p>
-            <button type="button" class="payment-button" id="payAndStart">PAY WITH IMD AND START</button>
-            <button type="button" class="payment-refresh" id="refreshPaymentStatus" hidden>REFRESH IMD STATUS</button>
-            <a class="payment-job" id="paymentJobLink" href="#" target="_blank" rel="noopener noreferrer" hidden>OPEN LIVE IMD JOB ↗</a>
-          </section>
-          <p class="studio-boundary">Validation uses the live IMD planner · quotes and paid admission are sent to IMD · every token approval and signature requires explicit wallet confirmation</p>
+          <div class="studio-objective"><span>COMPOSED OBJECTIVE</span><p id="objectivePreview">Complete the identity fields to compose the production objective</p></div>
+          <div id="imdFlow">
+            <div class="studio-validation" id="validationResult"><span>⌬</span><p>No validation has run</p></div>
+            <button type="button" class="studio-validate" id="validateRequest">VALIDATE WITH LIVE IMD</button>
+            <button type="button" class="studio-quote" id="createQuote" disabled>CREATE IMD QUOTE</button>
+            <section class="payment-panel" id="paymentPanel" hidden aria-live="polite">
+              <div class="payment-panel-head"><span>REAL IMD PAYMENT</span><b id="paymentState">QUOTE READY</b></div>
+              <dl class="payment-facts">
+                <div><dt>PRICE</dt><dd id="paymentPrice">—</dd></div>
+                <div><dt>NETWORK</dt><dd id="paymentNetwork">—</dd></div>
+                <div><dt>ASSET</dt><dd id="paymentAsset">—</dd></div>
+                <div><dt>RECIPIENT</dt><dd id="paymentRecipient">—</dd></div>
+                <div><dt>EXPIRES</dt><dd id="paymentExpiry">—</dd></div>
+                <div><dt>ORDER</dt><dd id="paymentOrder">—</dd></div>
+              </dl>
+              <p class="payment-disclosure">The wallet will show every approval and signature before IMD can charge anything · payment buys admission to the job and does not guarantee the final result</p>
+              <button type="button" class="payment-button" id="payAndStart">PAY WITH IMD AND START</button>
+              <button type="button" class="payment-refresh" id="refreshPaymentStatus" hidden>REFRESH IMD STATUS</button>
+              <a class="payment-job" id="paymentJobLink" href="#" target="_blank" rel="noopener noreferrer" hidden>OPEN LIVE IMD JOB ↗</a>
+            </section>
+            <p class="studio-boundary">Validation uses the live IMD planner · quotes and paid admission are sent to IMD · every token approval and signature requires explicit wallet confirmation</p>
+          </div>
         </aside>
       </form>
     </main>

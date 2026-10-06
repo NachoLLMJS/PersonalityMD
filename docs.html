@@ -41,7 +41,7 @@
           <a href="#safety">17 SAFETY</a>
           <a href="#privacy">18 DATA AND PRIVACY</a>
           <a href="#accessibility">19 ACCESSIBILITY</a>
-          <a href="#api">20 LOCAL API</a>
+          <a href="#api">20 SERVER API</a>
           <a href="#development">21 DEVELOPMENT</a>
           <a href="#files">22 FILE MAP</a>
           <a href="#limitations">23 LIMITATIONS</a>
@@ -95,7 +95,7 @@
               <i>→</i>
               <div><span>04</span><b>IMD CONTROL PLANE</b><small>Jobs check and quote endpoints</small></div>
             </div>
-            <div class="docs-callout"><b>PRODUCTION BRIDGE</b><p>The same origin bridge runs through a Vercel Function in production and through Vite middleware during local development Both environments reuse the same restricted request handler</p></div>
+            <div class="docs-callout"><b>PRODUCTION BRIDGE</b><p>The same-origin bridge runs through a Vercel Function in production and through Vite middleware in development Both environments reuse the same restricted request handler</p></div>
             <table class="docs-table">
               <thead><tr><th>LAYER</th><th>RESPONSIBILITY</th><th>CURRENT STATE</th></tr></thead>
               <tbody>
@@ -262,7 +262,7 @@
             <p>CREATE IMD QUOTE generates a fresh UUID request key and sends the validated action and input to IMD</p>
             <p>The returned order is real but remains unpaid until the user reviews the exact live price network asset recipient and expiry</p>
             <h3>Authentication</h3>
-            <p>The browser generates a random 32 byte token encoded as 64 hexadecimal characters and stores it in session storage The local bridge forwards it as a Bearer credential and uses the same token to recover order status</p>
+            <p>The browser generates a random 32 byte token encoded as 64 hexadecimal characters and stores it in session storage The same-origin bridge forwards it as a Bearer credential and uses the same token to recover order status</p>
             <h3>Wallet sequence</h3>
             <ol>
               <li>Connect an injected Ethereum wallet after an explicit click</li>
@@ -288,7 +288,7 @@
             <h2>IMAGE UPLOADS</h2>
             <p>The Creator Studio does not expose a customer image upload control</p>
             <p>The current public IMD customer request interface has no confirmed attachment route for sending reference image bytes with a paid job</p>
-            <p>Personality.md therefore does not accept preview describe or imply transmission of local reference files</p>
+            <p>Personality.md therefore does not accept preview describe or imply transmission of customer reference files through the IMD flow</p>
             <p>The original built in Build Hairstyle and Heritage selectors remain available because their selected text values are included directly in the IMD production objective</p>
             <div class="docs-callout warning"><b>NO SIMULATED UPLOAD</b><p>Image upload will remain absent until IMD publishes a supported customer attachment route that can be integrated and verified end to end</p></div>
           </div>
@@ -343,13 +343,13 @@
           <div class="docs-section-body">
             <p class="docs-eyebrow">PERSONALITY INDEX</p>
             <h2>MEDIA EXAMPLES</h2>
-            <p>The standalone Personality Index lives at <code>/personalities.html</code> and contains four user supplied vertical videos stored locally under <code>public/videos</code></p>
+            <p>The standalone Personality Index lives at <code>/personalities.html</code> and contains four user supplied vertical videos packaged under <code>public/videos</code></p>
             <ul>
               <li>Videos use a 9 by 16 display container</li>
               <li>Playback starts on pointer hover or keyboard focus</li>
               <li>Playback is muted looped and inline</li>
               <li>Leaving the card pauses the video and resets it to the beginning</li>
-              <li>Each video has a locally extracted poster frame</li>
+              <li>Each video has a pre-generated poster frame</li>
             </ul>
             <p>The cards are examples of possible virtual influencer media and are not presented as outputs created through the current Personality.md request flow</p>
           </div>
@@ -436,11 +436,11 @@
         <section class="docs-section" id="api">
           <div class="docs-section-index">20</div>
           <div class="docs-section-body">
-            <p class="docs-eyebrow">LOCAL BRIDGE CONTRACT</p>
-            <h2>LOCAL API</h2>
+            <p class="docs-eyebrow">SERVER BRIDGE CONTRACT</p>
+            <h2>SERVER API</h2>
             <h3>GET /api/imd/jobs</h3>
             <div class="docs-code"><code>GET /api/imd/jobs?limit=60&amp;exclude=oracle</code></div>
-            <p>Forwards a bounded public job request to IMD with a maximum local limit of 100</p>
+            <p>Forwards a bounded public job request to IMD with a configured maximum limit of 100</p>
             <h3>POST /api/imd/check</h3>
             <div class="docs-code"><code>{ "action": "job.open", "input": { "objective": "...", "skill": "create-video", "outputs": [] } }</code></div>
             <p>Forwards the proposed body to the free IMD request checker</p>
@@ -455,7 +455,7 @@
             <p>Reads enabled actions live prices network asset recipient limits and payment protocol configuration from IMD</p>
             <h3>Bridge failure behavior</h3>
             <ul>
-              <li>Unknown local routes return 404</li>
+              <li>Unknown bridge routes return 404</li>
               <li>Invalid request tokens return 401</li>
               <li>Upstream transport failures return 502</li>
               <li>Upstream status and JSON bodies are preserved where possible</li>
@@ -508,7 +508,7 @@
                 <tr><td>src/styles.css</td><td>Landing Explorer responsive system and media cards</td></tr>
                 <tr><td>src/create.css</td><td>Black Creator Studio visual system</td></tr>
                 <tr><td>src/docs.css</td><td>Documentation layout navigation tables and mobile rules</td></tr>
-                <tr><td>vite.config.js</td><td>Multi page build and local IMD bridge</td></tr>
+                <tr><td>vite.config.js</td><td>Multi page build and development API bridge</td></tr>
                 <tr><td>scripts/check.mjs</td><td>Required asset behavior and route assertions</td></tr>
                 <tr><td>public/references</td><td>21 original visual selector images plus provenance</td></tr>
                 <tr><td>public/videos</td><td>Four vertical examples poster images and provenance</td></tr>
@@ -524,12 +524,12 @@
             <p class="docs-eyebrow">HONEST BOUNDARIES</p>
             <h2>CURRENT LIMITATIONS</h2>
             <div class="limitation-list">
-              <article><b>NO CUSTOMER IMAGE UPLOAD TO IMD</b><p>The Creator Studio does not show a local file uploader because IMD has no confirmed public attachment route</p></article>
+              <article><b>NO CUSTOMER IMAGE UPLOAD TO IMD</b><p>The SWARM Creator does not show a file uploader because IMD has no confirmed public attachment route</p></article>
               <article><b>NO PERSONALITY DATABASE</b><p>Refreshing the page resets the current form</p></article>
               <article><b>NO RESULT DASHBOARD</b><p>The application connects admission to the job status URL but does not yet retrieve and render accepted media</p></article>
               <article><b>NO SOCIAL PUBLISHING</b><p>No account creation scheduling posting or platform credentials exist</p></article>
               <article><b>NO PERSISTENT MEMORY</b><p>The intended long term identity memory is not stored by the current frontend</p></article>
-              <article><b>LOCAL BRIDGE ONLY</b><p>The Vite middleware must become a production backend before deployment</p></article>
+              <article><b>PRODUCTION API BRIDGE</b><p>Vercel Functions expose the restricted same-origin API handlers used by the deployed application</p></article>
               <article><b>THIRD PARTY ASSET REVIEW</b><p>IMD derived industrial assets require permission review before commercial publication</p></article>
             </div>
           </div>
