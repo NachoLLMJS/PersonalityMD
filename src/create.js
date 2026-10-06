@@ -11,7 +11,7 @@ import {
   formatPaymentAmount,
   paymentStatusLabel,
 } from './imd-payment.js'
-import { assertFairlaunchQuote, buildFairlaunchWorkflow } from './imd-launch.js'
+import { assertFairlaunchQuote, buildFairlaunchWorkflow, shouldRetryFairlaunchCheck } from './imd-launch.js'
 
 const $ = (selector, root = document) => root.querySelector(selector)
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)]
@@ -504,11 +504,18 @@ async function checkFairlaunch() {
   setFairlaunchValidation('loading', 'Running the free live IMD check · no wallet payment is requested')
   try {
     const payload = composeFairlaunchPayload()
-    const response = await fetch('/api/imd/check', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) })
-    const result = await responseJson(response)
-    if (!response.ok) throw new Error(resultError(result, response))
-    const blockers = Array.isArray(result.blockers) ? result.blockers : []
-    if (blockers.length) throw new Error(blockers.map((item) => item.detail || item.code || String(item)).join(' · '))
+    let result
+    let blockers = []
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      const response = await fetch('/api/imd/check', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) })
+      result = await responseJson(response)
+      if (!response.ok) throw new Error(resultError(result, response))
+      blockers = Array.isArray(result.blockers) ? result.blockers : []
+      if (!blockers.length) break
+      if (attempt === 3 || !shouldRetryFairlaunchCheck(blockers)) throw new Error(blockers.map((item) => item.detail || item.code || String(item)).join(' · '))
+      setFairlaunchValidation('loading', `IMD returned an ambiguous website assessment · rechecking the same free request ${attempt + 1}/3`)
+      await delay(350)
+    }
     const plan = Array.isArray(result.plan) ? result.plan.map((step) => step.title || step.skill).filter(Boolean).join(' → ') : 'Token contracts and website workflow ready'
     fairlaunchCheckedPayload = payload
     fairlaunchQuoteButton.disabled = false

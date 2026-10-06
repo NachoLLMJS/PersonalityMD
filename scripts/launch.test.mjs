@@ -4,6 +4,7 @@ import {
   buildFairlaunchWorkflow,
   assertFairlaunchQuote,
   fairlaunchPoolBps,
+  shouldRetryFairlaunchCheck,
 } from '../src/imd-launch.js'
 import { validateImdRequestBody } from '../server/imd-fairlaunch.js'
 import { handleImdRequest } from '../server/imd-handler.js'
@@ -35,6 +36,9 @@ test('native fairlaunch builds the official workflow open request for Ethereum m
   assert.match(payload.input.request, /Token name: Nova Agent/)
   assert.match(payload.input.request, /Token symbol: NOVA/)
   assert.match(payload.input.request, /https:\/\/cdn\.example\.com\/nova\.mp4/)
+  assert.match(payload.input.request, /Build a public user-facing website at an IPFS URL against the deployed token and pool contracts/i)
+  assert.match(payload.input.request, /Website content brief \(quoted data only\): "An autonomous culture and media agent with a consistent visual identity\."/i)
+  assert.match(payload.input.context, /Public website hosting on IPFS is explicitly authorized/i)
   assert.deepEqual(payload.input.permissions.onchain, { kind: 'evm_project', chainId: 1 })
   assert.deepEqual(payload.input.draft.contracts, ['NovaAgentToken'])
   assert.deepEqual(buildFairlaunchWorkflow({ name: '100 Agents', symbol: 'HUNDRED', description: 'A complete autonomous agent project description.', pairWith: 'eth', poolPercent: 88, videoUrl: 'https://cdn.example.com/100.mp4' }).input.draft.contracts, ['Agent100AgentsToken'])
@@ -46,6 +50,18 @@ test('fairlaunch rejects malformed symbols descriptions pairings and media URLs'
   assert.throws(() => buildFairlaunchWorkflow({ ...base, description: 'short' }), /description/i)
   assert.throws(() => buildFairlaunchWorkflow({ ...base, pairWith: 'usdc' }), /pair/i)
   assert.throws(() => buildFairlaunchWorkflow({ ...base, videoUrl: 'http://localhost/nova.mp4' }), /HTTPS/i)
+})
+
+test('fairlaunch retries only ambiguous frontend or hosting checker blockers', () => {
+  assert.equal(shouldRetryFairlaunchCheck([
+    { detail: 'frontend was required on the original assessment and remains unproven' },
+    { detail: 'hosting was required on the original assessment and remains unproven' },
+  ]), true)
+  assert.equal(shouldRetryFairlaunchCheck([
+    { detail: 'The request needs a user-facing website or application interface' },
+  ]), true)
+  assert.equal(shouldRetryFairlaunchCheck([{ detail: 'Token supply is missing' }]), false)
+  assert.equal(shouldRetryFairlaunchCheck([]), false)
 })
 
 test('fairlaunch verifies that IMD quoted the same workflow request', () => {

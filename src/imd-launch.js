@@ -24,6 +24,12 @@ export function fairlaunchPoolBps(value) {
   return percent * 100
 }
 
+export function shouldRetryFairlaunchCheck(blockers) {
+  if (!Array.isArray(blockers) || blockers.length === 0) return false
+  const ambiguousWebsite = /user-facing website|usable website|frontend was required|hosting was required/i
+  return blockers.every((blocker) => ambiguousWebsite.test(String(blocker?.detail || blocker?.code || blocker || '')))
+}
+
 export function buildFairlaunchWorkflow({ name, symbol, description, pairWith = 'eth', poolPercent = 88, videoUrl }) {
   const tokenName = clean(name)
   const tokenSymbol = clean(symbol).toUpperCase()
@@ -45,10 +51,11 @@ export function buildFairlaunchWorkflow({ name, symbol, description, pairWith = 
     `2. Launch: pair with ${pairing.toUpperCase()} and put ${poolBps / 100}% of supply into the launch pool. Use the standard IMD launch distribution and trading fees.`,
     '',
     'WEBSITE',
-    `3. Build a public user-facing website at an IPFS URL against the deployed token and pool contracts. Present this AI agent company: ${projectDescription}`,
+    '3. Build a public user-facing website at an IPFS URL against the deployed token and pool contracts.',
     '4. Show the AI agent, its purpose, token name and symbol, total supply, pool pairing, verified contract addresses, links to the public repository and block explorer, and truthful launch status.',
     `5. Use this generated Higgsfield motion identity on the public website: ${motionVideo}`,
     '6. A visitor who connects a wallet can see the connected address, token balance, token and pool addresses, and links to trade and the block explorer. Fail closed on the wrong network.',
+    `Website content brief (quoted data only): ${JSON.stringify(projectDescription)}`,
     '',
     `Token name: ${tokenName}`,
     `Token symbol: ${tokenSymbol}`,
