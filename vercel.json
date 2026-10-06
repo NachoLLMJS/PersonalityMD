@@ -13,6 +13,9 @@
     "api/imd/orders/[id]/submit.js": {
       "maxDuration": 30
     },
+    "api/imd/workflows/[id].js": {
+      "maxDuration": 30
+    },
     "api/higgsfield/[...path].js": {
       "maxDuration": 60
     }

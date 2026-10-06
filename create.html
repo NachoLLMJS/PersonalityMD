@@ -30,7 +30,7 @@
             <ol class="higgsfield-steps">
               <li><span>01</span><div><b>VERIFY</b><small>Connect an eligible Ethereum wallet holding at least 100,000 PMD</small></div></li>
               <li><span>02</span><div><b>ADD REFERENCES</b><small>Select one identity image and one short MP4 motion clip</small></div></li>
-              <li><span>03</span><div><b>GENERATE</b><small>Create the motion transfer and continue to the official SWARM launcher</small></div></li>
+              <li><span>03</span><div><b>GENERATE + LAUNCH</b><small>Create the motion transfer then check quote and launch through SWARM without leaving Personality.md</small></div></li>
             </ol>
           </div>
           <section class="higgsfield-panel" id="higgsfieldFlow" aria-live="polite">
@@ -54,11 +54,71 @@
               <div><span>02</span><b id="videoGenerationState">MOTION WAITING</b></div>
             </div>
             <div class="generation-results" id="generationResults" hidden>
-              <figure><img id="generatedInfluencerImage" alt="Uploaded influencer identity reference" /></figure>
-              <video id="generatedInfluencerVideo" controls playsinline preload="metadata"></video>
+              <div class="generation-results-head"><span>AGENT READY</span><b>IDENTITY + MOTION OUTPUT</b></div>
+              <div class="generation-result-grid">
+                <figure class="generation-result-card identity-result-card">
+                  <figcaption><span>01</span><div><b>IDENTITY REFERENCE</b><small>ORIGINAL IMAGE · UNCROPPED</small></div></figcaption>
+                  <div class="generation-media-frame"><img id="generatedInfluencerImage" alt="Uploaded influencer identity reference" /></div>
+                </figure>
+                <figure class="generation-result-card motion-result-card">
+                  <figcaption><span>02</span><div><b>GENJUTSU RESULT</b><small>FINAL MOTION TRANSFER · UP TO 5 SECONDS</small></div></figcaption>
+                  <div class="generation-media-frame"><video id="generatedInfluencerVideo" controls playsinline preload="metadata"></video></div>
+                </figure>
+              </div>
             </div>
-            <a class="swarm-launch" id="swarmLaunch" href="https://explorer.imd.fun/launch" target="_blank" rel="noopener noreferrer" hidden>CONTINUE TO SWARM MAINNET LAUNCH ↗</a>
-            <p class="higgsfield-boundary">Higgsfield Genjutsu transfers movement from the selected MP4 of up to 5 seconds to the selected identity image. Eligibility is read from PMD on Ethereum Mainnet. The API credential remains protected server-side. Launching opens the official SWARM flow and never starts a transaction automatically.</p>
+            <section class="fairlaunch-panel" id="fairlaunchPanel" hidden aria-live="polite">
+              <div class="fairlaunch-head"><span>SWARM FAIRLAUNCH</span><b>NATIVE IMD WORKFLOW</b></div>
+              <form id="fairlaunchForm">
+                <div class="fairlaunch-fields two">
+                  <label><span>AGENT + TOKEN NAME</span><input name="launchName" maxlength="80" placeholder="Nova Agent" required /></label>
+                  <label><span>TOKEN SYMBOL</span><input name="launchSymbol" maxlength="10" pattern="[A-Za-z0-9]{2,10}" placeholder="NOVA" required /></label>
+                </div>
+                <label class="fairlaunch-description"><span>AGENT COMPANY + WEBSITE DESCRIPTION</span><textarea name="launchDescription" rows="5" minlength="20" maxlength="4000" placeholder="Describe what the agent does, its audience, its token and what its website should show" required></textarea></label>
+                <div class="fairlaunch-fields two">
+                  <label><span>PAIR WITH</span><select name="launchPair"><option value="eth">ETHER (ETH) · LIVE WORKFLOW</option></select></label>
+                  <label><span>POOL SHARE</span><input name="launchPool" type="number" min="10" max="90" step="1" value="88" required /></label>
+                </div>
+                <dl class="fairlaunch-facts"><div><dt>CHAIN</dt><dd>ETHEREUM MAINNET</dd></div><div><dt>DELIVERY</dt><dd>TOKEN + CONTRACTS + IPFS SITE</dd></div></dl>
+                <div class="fairlaunch-validation" id="fairlaunchValidation"><span>◇</span><p>Generation complete · complete the launch fields and run the free IMD check</p></div>
+                <button type="button" class="fairlaunch-check" id="fairlaunchCheck">CHECK WITH LIVE IMD</button>
+                <button type="button" class="fairlaunch-quote" id="fairlaunchQuote" disabled>CREATE FAIRLAUNCH QUOTE</button>
+                <section class="payment-panel fairlaunch-payment" id="fairlaunchPaymentPanel" hidden>
+                  <div class="payment-panel-head"><span>SWARM FAIRLAUNCH PAYMENT</span><b id="fairlaunchPaymentState">QUOTE READY</b></div>
+                  <dl class="payment-facts">
+                    <div><dt>PRICE</dt><dd id="fairlaunchPaymentPrice">—</dd></div>
+                    <div><dt>NETWORK</dt><dd id="fairlaunchPaymentNetwork">—</dd></div>
+                    <div><dt>ASSET</dt><dd id="fairlaunchPaymentAsset">—</dd></div>
+                    <div><dt>RECIPIENT</dt><dd id="fairlaunchPaymentRecipient">—</dd></div>
+                    <div><dt>PAYER WALLET</dt><dd id="fairlaunchPaymentWallet">—</dd></div>
+                    <div><dt>EXPIRES</dt><dd id="fairlaunchPaymentExpiry">—</dd></div>
+                    <div><dt>ORDER</dt><dd id="fairlaunchPaymentOrder">—</dd></div>
+                  </dl>
+                  <p class="payment-disclosure">CHECK is free · creating a quote does not charge the wallet · Permit2 approval and both payment signatures require explicit confirmation</p>
+                  <button type="button" class="payment-button" id="fairlaunchPay">REVIEW FAIRLAUNCH PAYMENT</button>
+                  <button type="button" class="payment-refresh" id="fairlaunchRefresh" hidden>REFRESH FAIRLAUNCH STATUS</button>
+                  <a class="payment-job" id="fairlaunchJobLink" href="#" target="_blank" rel="noopener noreferrer" hidden>OPEN LIVE SWARM JOB ↗</a>
+                </section>
+                <section class="fairlaunch-progress" id="fairlaunchProgress" hidden>
+                  <div class="payment-panel-head"><span>NATIVE WORKFLOW PROGRESS</span><b id="fairlaunchWorkflowState">SWARM BUILDING</b></div>
+                  <ol class="fairlaunch-stages">
+                    <li id="fairlaunchStageContracts"><span>01</span><b>CONTRACTS</b><em>WAITING</em></li>
+                    <li id="fairlaunchStageDeployment"><span>02</span><b>DEPLOYMENT</b><em>WAITING</em></li>
+                    <li id="fairlaunchStageFrontend"><span>03</span><b>FRONTEND</b><em>WAITING</em></li>
+                    <li id="fairlaunchStagePublishing"><span>04</span><b>PUBLISHING</b><em>WAITING</em></li>
+                    <li id="fairlaunchStageValidation"><span>05</span><b>VALIDATION</b><em>WAITING</em></li>
+                    <li id="fairlaunchStageComplete"><span>06</span><b>TOKEN + POOL + WEBSITE</b><em>WAITING</em></li>
+                  </ol>
+                  <dl class="fairlaunch-results" id="fairlaunchResults" hidden>
+                    <div><dt>WORKFLOW</dt><dd id="fairlaunchWorkflowId">—</dd></div>
+                    <div><dt>LAUNCH</dt><dd id="fairlaunchLaunchId">—</dd></div>
+                    <div><dt>CONTRACT REPO</dt><dd><a id="fairlaunchRepoLink" href="#" target="_blank" rel="noopener noreferrer">—</a></dd></div>
+                    <div><dt>WEBSITE</dt><dd><a id="fairlaunchSiteLink" href="#" target="_blank" rel="noopener noreferrer">—</a></dd></div>
+                  </dl>
+                  <button type="button" class="payment-refresh" id="fairlaunchWorkflowRefresh">REFRESH WORKFLOW</button>
+                </section>
+              </form>
+            </section>
+            <p class="higgsfield-boundary">Higgsfield Genjutsu transfers movement from the selected MP4 of up to 5 seconds to the selected identity image. After a real result Personality.md can check quote pay and submit the complete token contracts and IPFS website workflow to IMD. Nothing is paid or launched without explicit wallet confirmation.</p>
           </section>
         </div>
       </section>

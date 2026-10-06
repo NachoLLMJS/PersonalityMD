@@ -11,6 +11,7 @@ import {
   formatPaymentAmount,
   paymentStatusLabel,
 } from './imd-payment.js'
+import { assertFairlaunchQuote, buildFairlaunchWorkflow } from './imd-launch.js'
 
 const $ = (selector, root = document) => root.querySelector(selector)
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)]
@@ -45,12 +46,25 @@ const videoGenerationState = $('#videoGenerationState')
 const generationResults = $('#generationResults')
 const generatedInfluencerImage = $('#generatedInfluencerImage')
 const generatedInfluencerVideo = $('#generatedInfluencerVideo')
-const swarmLaunch = $('#swarmLaunch')
 const higgsfieldImageInput = $('#higgsfieldImageInput')
 const higgsfieldVideoInput = $('#higgsfieldVideoInput')
 const higgsfieldImageName = $('#higgsfieldImageName')
 const higgsfieldVideoName = $('#higgsfieldVideoName')
 const higgsfieldMotionPrompt = $('#higgsfieldMotionPrompt')
+const fairlaunchPanel = $('#fairlaunchPanel')
+const fairlaunchForm = $('#fairlaunchForm')
+const fairlaunchValidation = $('#fairlaunchValidation')
+const fairlaunchCheckButton = $('#fairlaunchCheck')
+const fairlaunchQuoteButton = $('#fairlaunchQuote')
+const fairlaunchPaymentPanel = $('#fairlaunchPaymentPanel')
+const fairlaunchPaymentButton = $('#fairlaunchPay')
+const fairlaunchRefreshButton = $('#fairlaunchRefresh')
+const fairlaunchJobLink = $('#fairlaunchJobLink')
+const fairlaunchPaymentState = $('#fairlaunchPaymentState')
+const fairlaunchProgress = $('#fairlaunchProgress')
+const fairlaunchWorkflowState = $('#fairlaunchWorkflowState')
+const fairlaunchWorkflowRefresh = $('#fairlaunchWorkflowRefresh')
+const fairlaunchResults = $('#fairlaunchResults')
 
 let checkedPayload = null
 let currentOrder = null
@@ -64,6 +78,14 @@ let higgsfieldBusy = false
 let higgsfieldImageFile = null
 let higgsfieldVideoFile = null
 let higgsfieldImagePreviewUrl = null
+let generatedHiggsfieldVideoUrl = null
+let fairlaunchCheckedPayload = null
+let fairlaunchCurrentOrder = null
+let fairlaunchQuotedWallet = null
+let fairlaunchWorkflowId = null
+let fairlaunchWorkflowPolling = false
+let fairlaunchPaymentMode = 'connect'
+let fairlaunchPaymentBusy = false
 
 const stripStops = (value = '') => String(value).replaceAll('.', '').trim()
 const clean = (value = '') => stripStops(value).replace(/\s+/g, ' ')
@@ -198,7 +220,6 @@ async function loadHiggsfieldConfig() {
     if (!response.ok) throw new Error(result.error || 'Higgsfield service is unavailable')
     higgsfieldConfig = result
     holderMinimum.textContent = `${new Intl.NumberFormat('en-US').format(Number(result.minimum))} PMD`
-    swarmLaunch.href = result.launcherUrl
   } catch (error) {
     setHolderStatus('error', error.message)
     verifyHolderButton.disabled = true
@@ -366,7 +387,9 @@ async function generateHiggsfieldInfluencer() {
   higgsfieldVideoInput.disabled = true
   generationProgress.hidden = false
   generationResults.hidden = true
-  swarmLaunch.hidden = true
+  fairlaunchPanel.hidden = true
+  generatedHiggsfieldVideoUrl = null
+  resetFairlaunchPayment()
   generatedInfluencerVideo.removeAttribute('src')
   try {
     imageGenerationState.textContent = 'UPLOADING REFERENCES'
@@ -385,12 +408,15 @@ async function generateHiggsfieldInfluencer() {
     const result = await pollHiggsfieldJob(job.jobToken, (status) => { videoGenerationState.textContent = `MOTION ${status.toUpperCase()}` })
     const outputUrl = result.video?.url
     if (!outputUrl) throw new Error('Higgsfield completed without a video URL')
-    generatedInfluencerVideo.src = outputUrl
+    const generatedVideo = new URL(outputUrl)
+    if (generatedVideo.protocol !== 'https:') throw new Error('Higgsfield returned an invalid video URL')
+    generatedHiggsfieldVideoUrl = generatedVideo.href
+    generatedInfluencerVideo.src = generatedHiggsfieldVideoUrl
     videoGenerationState.textContent = 'MOTION COMPLETE'
     generationResults.hidden = false
-    swarmLaunch.hidden = false
-    setHolderStatus('success', 'Higgsfield motion transfer complete · SWARM launch is now available')
-    showToast('Higgsfield video ready · SWARM launch unlocked')
+    revealFairlaunch()
+    setHolderStatus('success', 'Higgsfield motion transfer complete · native SWARM fairlaunch is ready below')
+    showToast('Higgsfield video ready · native fairlaunch unlocked')
   } catch (error) {
     setHolderStatus('error', error.message)
     showToast(error.message, 'red')
@@ -400,6 +426,438 @@ async function generateHiggsfieldInfluencer() {
     higgsfieldVideoInput.disabled = !higgsfieldSessionToken
     higgsfieldBusy = false
     updateHiggsfieldAvailability()
+  }
+}
+
+function setFairlaunchValidation(status, message) {
+  fairlaunchValidation.className = `fairlaunch-validation ${status || ''}`.trim()
+  replaceStatusContent(fairlaunchValidation, status === 'success' ? '◆' : status === 'loading' ? '⌬' : status === 'error' ? '⛌' : '◇', message)
+}
+
+function resetFairlaunchPayment() {
+  fairlaunchCheckedPayload = null
+  fairlaunchCurrentOrder = null
+  fairlaunchQuotedWallet = null
+  fairlaunchWorkflowId = null
+  fairlaunchQuoteButton.disabled = true
+  fairlaunchPaymentPanel.hidden = true
+  fairlaunchPaymentButton.hidden = false
+  fairlaunchRefreshButton.hidden = true
+  fairlaunchJobLink.hidden = true
+  fairlaunchProgress.hidden = true
+  fairlaunchResults.hidden = true
+  sessionStorage.removeItem('personalityFairlaunchOrderId')
+  sessionStorage.removeItem('personalityFairlaunchQuotedWallet')
+  sessionStorage.removeItem('personalityFairlaunchWorkflowId')
+}
+
+function suggestedLaunchName() {
+  const filename = higgsfieldImageFile?.name?.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').trim()
+  return filename && filename.length >= 2 ? filename.slice(0, 80) : 'Personality Agent'
+}
+
+function suggestedLaunchSymbol(name) {
+  const words = String(name).toUpperCase().match(/[A-Z0-9]+/g) || []
+  const initials = words.map((word) => word[0]).join('').slice(0, 10)
+  if (initials.length >= 2) return initials
+  return words.join('').slice(0, 5).padEnd(2, 'X') || 'AGENT'
+}
+
+function revealFairlaunch() {
+  const nameInput = fairlaunchForm.elements.launchName
+  const symbolInput = fairlaunchForm.elements.launchSymbol
+  const descriptionInput = fairlaunchForm.elements.launchDescription
+  if (!nameInput.value.trim()) nameInput.value = suggestedLaunchName()
+  if (!symbolInput.value.trim()) symbolInput.value = suggestedLaunchSymbol(nameInput.value)
+  if (!descriptionInput.value.trim()) {
+    const motion = higgsfieldMotionPrompt.value.trim()
+    descriptionInput.value = motion
+      ? `An AI agent with a consistent generated identity and this motion direction: ${motion}`
+      : 'An AI agent company with a consistent generated motion identity, a public token, verified contracts and a website connected to its live Ethereum deployment.'
+  }
+  fairlaunchPanel.hidden = false
+  setFairlaunchValidation('', 'Generation complete · review the launch fields and run the free IMD check')
+  fairlaunchPanel.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+function fairlaunchValues() {
+  return Object.fromEntries(new FormData(fairlaunchForm).entries())
+}
+
+function composeFairlaunchPayload() {
+  if (!generatedHiggsfieldVideoUrl) throw new Error('Complete a real Higgsfield generation before fairlaunch')
+  const values = fairlaunchValues()
+  return buildFairlaunchWorkflow({
+    name: values.launchName,
+    symbol: values.launchSymbol,
+    description: values.launchDescription,
+    pairWith: values.launchPair,
+    poolPercent: values.launchPool,
+    videoUrl: generatedHiggsfieldVideoUrl,
+  })
+}
+
+async function checkFairlaunch() {
+  if (!fairlaunchForm.reportValidity()) return
+  fairlaunchCheckButton.disabled = true
+  fairlaunchQuoteButton.disabled = true
+  setFairlaunchValidation('loading', 'Running the free live IMD check · no wallet payment is requested')
+  try {
+    const payload = composeFairlaunchPayload()
+    const response = await fetch('/api/imd/check', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) })
+    const result = await responseJson(response)
+    if (!response.ok) throw new Error(resultError(result, response))
+    const blockers = Array.isArray(result.blockers) ? result.blockers : []
+    if (blockers.length) throw new Error(blockers.map((item) => item.detail || item.code || String(item)).join(' · '))
+    const plan = Array.isArray(result.plan) ? result.plan.map((step) => step.title || step.skill).filter(Boolean).join(' → ') : 'Token contracts and website workflow ready'
+    fairlaunchCheckedPayload = payload
+    fairlaunchQuoteButton.disabled = false
+    setFairlaunchValidation('success', `${plan} · free check passed · create an unpaid quote when ready`)
+  } catch (error) {
+    fairlaunchCheckedPayload = null
+    setFairlaunchValidation('error', error.message)
+  } finally {
+    fairlaunchCheckButton.disabled = false
+  }
+}
+
+function fairlaunchRequestToken() {
+  let token = sessionStorage.getItem('personalityFairlaunchRequestToken')
+  if (!/^[0-9a-f]{64}$/.test(token || '')) {
+    token = [...crypto.getRandomValues(new Uint8Array(32))].map((byte) => byte.toString(16).padStart(2, '0')).join('')
+    sessionStorage.setItem('personalityFairlaunchRequestToken', token)
+  }
+  return token
+}
+
+function fairlaunchPaidHeaders(extra = {}) {
+  return { 'x-personality-request-token': fairlaunchRequestToken(), ...extra }
+}
+
+function fairlaunchQuoteTerms() {
+  const quote = fairlaunchCurrentOrder?.quote
+  if (!quote?.payment || quote.action !== 'workflow.open' || quote.payment.network !== 'eip155:1') throw new Error('This fairlaunch requires a workflow quote on Ethereum Mainnet')
+  if (!fairlaunchQuotedWallet) throw new Error('The paying wallet binding is missing · create a new fairlaunch quote')
+  return { quote, payment: quote.payment, amount: BigInt(quote.payment.amount) }
+}
+
+function setFairlaunchPaymentButton(mode, label, disabled = false) {
+  fairlaunchPaymentMode = mode
+  fairlaunchPaymentButton.textContent = label
+  fairlaunchPaymentButton.disabled = disabled
+}
+
+function renderFairlaunchPaymentPanel() {
+  const { quote, payment } = fairlaunchQuoteTerms()
+  fairlaunchPaymentPanel.hidden = false
+  fairlaunchPaymentButton.hidden = false
+  fairlaunchRefreshButton.hidden = true
+  fairlaunchJobLink.hidden = true
+  fairlaunchPaymentState.textContent = paymentStatusLabel(fairlaunchCurrentOrder.status).replace('JOB', 'LAUNCH')
+  $('#fairlaunchPaymentPrice').textContent = `${formatPaymentAmount(payment.amount, payment.decimals)} IMD`
+  $('#fairlaunchPaymentNetwork').textContent = 'ETHEREUM MAINNET'
+  $('#fairlaunchPaymentAsset').textContent = shortAddress(payment.asset).toUpperCase()
+  $('#fairlaunchPaymentRecipient').textContent = shortAddress(payment.payTo).toUpperCase()
+  $('#fairlaunchPaymentWallet').textContent = shortAddress(fairlaunchQuotedWallet).toUpperCase()
+  $('#fairlaunchPaymentExpiry').textContent = new Date(Number(quote.expiresAt) * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  $('#fairlaunchPaymentOrder').textContent = shortAddress(fairlaunchCurrentOrder.id).toUpperCase()
+  setFairlaunchPaymentButton(connectedAddress ? 'check' : 'connect', connectedAddress ? 'CHECK FAIRLAUNCH PAYMENT READINESS' : 'CONNECT WALLET TO REVIEW FAIRLAUNCH')
+  if (connectedAddress) refreshFairlaunchPaymentAction().catch((error) => setFairlaunchValidation('error', error.message))
+}
+
+async function createFairlaunchQuote() {
+  if (!fairlaunchCheckedPayload) return
+  fairlaunchQuoteButton.disabled = true
+  try {
+    fairlaunchQuotedWallet = await ensureWallet()
+    setFairlaunchValidation('loading', 'Creating a real unpaid SWARM fairlaunch quote for the connected wallet')
+    const response = await fetch('/api/imd/quote', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', ...fairlaunchPaidHeaders() },
+      body: JSON.stringify({ ...fairlaunchCheckedPayload, requestKey: crypto.randomUUID() }),
+    })
+    const result = await responseJson(response)
+    if (!response.ok) throw new Error(resultError(result, response))
+    fairlaunchCurrentOrder = extractQuoteOrder(result)
+    assertFairlaunchQuote(fairlaunchCurrentOrder, fairlaunchCheckedPayload)
+    sessionStorage.setItem('personalityFairlaunchOrderId', fairlaunchCurrentOrder.id)
+    sessionStorage.setItem('personalityFairlaunchQuotedWallet', fairlaunchQuotedWallet)
+    renderFairlaunchPaymentPanel()
+    setFairlaunchValidation('success', `Unpaid SWARM quote ${fairlaunchCurrentOrder.id} ready · review every term before confirming through the wallet`)
+    showToast('Unpaid SWARM fairlaunch quote created')
+  } catch (error) {
+    setFairlaunchValidation('error', error.message)
+    fairlaunchQuoteButton.disabled = false
+  }
+}
+
+async function refreshFairlaunchPaymentAction() {
+  if (!fairlaunchCurrentOrder) return
+  if (!connectedAddress) return setFairlaunchPaymentButton('connect', 'CONNECT WALLET TO REVIEW FAIRLAUNCH')
+  if (connectedAddress.toLowerCase() !== fairlaunchQuotedWallet?.toLowerCase()) throw new Error(`Connect the wallet bound to this quote: ${shortAddress(fairlaunchQuotedWallet)}`)
+  setFairlaunchPaymentButton('busy', 'CHECKING PERMIT2 ALLOWANCE', true)
+  const { payment, amount } = fairlaunchQuoteTerms()
+  const { publicClient } = walletClients()
+  const allowance = await publicClient.readContract(getPermit2AllowanceReadParams({ tokenAddress: payment.asset, ownerAddress: connectedAddress }))
+  if (allowance < amount) setFairlaunchPaymentButton('approve', 'APPROVE IMD FOR PERMIT2')
+  else setFairlaunchPaymentButton('pay', `PAY ${formatPaymentAmount(payment.amount, payment.decimals)} IMD AND LAUNCH`)
+}
+
+async function approveFairlaunchPermit2() {
+  const { quote, payment } = fairlaunchQuoteTerms()
+  if (Math.floor(Date.now() / 1000) >= Number(quote.expiresAt)) throw new Error('The SWARM quote expired · create a new quote')
+  setFairlaunchPaymentButton('busy', 'WAITING FOR PERMIT2 APPROVAL', true)
+  setFairlaunchValidation('loading', 'Your wallet will request a reusable IMD allowance for Permit2 · this does not pay or launch yet')
+  const { walletClient, publicClient } = walletClients()
+  const approval = createPermit2ApprovalTx(payment.asset)
+  const hash = await walletClient.sendTransaction({ account: connectedAddress, chain: mainnet, to: approval.to, data: approval.data })
+  const receipt = await publicClient.waitForTransactionReceipt({ hash })
+  if (receipt.status !== 'success') throw new Error('Permit2 approval transaction failed')
+  setFairlaunchValidation('success', 'Permit2 approval confirmed · review the exact fairlaunch payment before pressing pay')
+  showToast('Permit2 approval confirmed')
+  await refreshFairlaunchPaymentAction()
+}
+
+function assertFairlaunchChallenge(challenge) {
+  const { quote, payment } = fairlaunchQuoteTerms()
+  if (!connectedAddress || connectedAddress.toLowerCase() !== fairlaunchQuotedWallet.toLowerCase()) throw new Error('Connected wallet does not match the wallet bound to this fairlaunch quote')
+  const accepted = challenge?.accepts?.[0]
+  if (!accepted || challenge.x402Version !== 2 || challenge.quote?.id !== quote.id || challenge.quote?.action !== 'workflow.open') throw new Error('IMD returned an invalid fairlaunch payment challenge')
+  const sameTerms = accepted.network === payment.network && accepted.asset?.toLowerCase() === payment.asset.toLowerCase() && accepted.amount === payment.amount && accepted.payTo?.toLowerCase() === payment.payTo.toLowerCase()
+  if (!sameTerms) throw new Error('SWARM payment terms changed · create a new quote')
+  return accepted
+}
+
+async function fetchFairlaunchPaymentStatus() {
+  if (!fairlaunchCurrentOrder) throw new Error('No SWARM fairlaunch order is active')
+  const response = await fetch(`/api/imd/orders/${fairlaunchCurrentOrder.id}`, { headers: fairlaunchPaidHeaders() })
+  const result = await responseJson(response)
+  if (!response.ok) throw new Error(resultError(result, response))
+  fairlaunchCurrentOrder = result.order || fairlaunchCurrentOrder
+  applyFairlaunchPaymentStatus(result)
+  return result
+}
+
+const fairlaunchStageIds = [
+  'fairlaunchStageContracts',
+  'fairlaunchStageDeployment',
+  'fairlaunchStageFrontend',
+  'fairlaunchStagePublishing',
+  'fairlaunchStageValidation',
+  'fairlaunchStageComplete',
+]
+
+function setFairlaunchStage(index, state, label) {
+  const element = $(`#${fairlaunchStageIds[index]}`)
+  element.className = state
+  element.querySelector('em').textContent = label
+}
+
+function workflowStageIndex(workflow) {
+  const statuses = { contracts: 0, deployment: 1, frontend: 2, publishing: 3, validating: 4, completed: 5, superseded: 5 }
+  if (statuses[workflow.status] !== undefined) return statuses[workflow.status]
+  if (workflow.site) return 4
+  if (workflow.frontend) return 3
+  if (workflow.launch?.status === 'live') return 2
+  if (workflow.contracts?.state === 'completed') return 1
+  return 0
+}
+
+function safeExternalUrl(value) {
+  try {
+    const url = new URL(value)
+    return url.protocol === 'https:' ? url.href : null
+  } catch { return null }
+}
+
+function hasLiveFairlaunchOutputs(workflow) {
+  const repoUrl = safeExternalUrl(workflow.contracts?.repoUrl || workflow.frontend?.repoUrl)
+  const siteUrl = workflow.site?.ensName ? safeExternalUrl(`https://${workflow.site.ensName}`) : workflow.site?.cid ? safeExternalUrl(`https://ipfs.io/ipfs/${workflow.site.cid}`) : null
+  return workflow.status === 'completed' && workflow.launch?.status === 'live' && Boolean(repoUrl && siteUrl)
+}
+
+function renderFairlaunchWorkflow(workflow) {
+  const index = workflowStageIndex(workflow)
+  const failed = Boolean(workflow.failure) || ['blocked', 'failed'].includes(workflow.status)
+  const repoUrl = safeExternalUrl(workflow.contracts?.repoUrl || workflow.frontend?.repoUrl)
+  const siteUrl = workflow.site?.ensName ? safeExternalUrl(`https://${workflow.site.ensName}`) : workflow.site?.cid ? safeExternalUrl(`https://ipfs.io/ipfs/${workflow.site.cid}`) : null
+  const outputsLive = hasLiveFairlaunchOutputs(workflow)
+  fairlaunchProgress.hidden = false
+  fairlaunchWorkflowState.textContent = failed ? 'WORKFLOW BLOCKED' : outputsLive ? 'TOKEN + POOL + WEBSITE LIVE' : workflow.status === 'completed' ? 'VERIFYING LIVE OUTPUTS' : clean(workflow.status || 'SWARM BUILDING').toUpperCase()
+  fairlaunchStageIds.forEach((_, stageIndex) => {
+    if (failed && stageIndex === index) setFairlaunchStage(stageIndex, 'error', 'BLOCKED')
+    else if (outputsLive || stageIndex < index) setFairlaunchStage(stageIndex, 'complete', 'COMPLETE')
+    else if (workflow.status === 'completed' && stageIndex === fairlaunchStageIds.length - 1) setFairlaunchStage(stageIndex, 'active', 'VERIFYING OUTPUTS')
+    else if (stageIndex === index) setFairlaunchStage(stageIndex, 'active', workflow.waitingForHosting ? 'HOSTING' : 'RUNNING')
+    else setFairlaunchStage(stageIndex, '', 'WAITING')
+  })
+  $('#fairlaunchWorkflowId').textContent = shortAddress(workflow.id).toUpperCase()
+  $('#fairlaunchLaunchId').textContent = workflow.launch?.id ? `${shortAddress(workflow.launch.id).toUpperCase()} · ${clean(workflow.launch.status).toUpperCase()}` : 'WAITING'
+  const repoLink = $('#fairlaunchRepoLink')
+  repoLink.textContent = repoUrl ? 'OPEN SOURCE ↗' : 'WAITING'
+  repoLink.href = repoUrl || '#'
+  const siteLink = $('#fairlaunchSiteLink')
+  siteLink.textContent = siteUrl ? 'OPEN LIVE WEBSITE ↗' : workflow.site?.status ? clean(workflow.site.status).toUpperCase() : 'WAITING'
+  siteLink.href = siteUrl || '#'
+  fairlaunchResults.hidden = false
+  if (failed) setFairlaunchValidation('error', `SWARM workflow blocked · ${workflow.failure || 'inspect the workflow status before continuing'}`)
+  else if (outputsLive) {
+    setFairlaunchValidation('success', 'IMD confirms the workflow is completed · token pool contracts source and website are live')
+    showToast('Token pool and website are live')
+  } else if (workflow.status === 'completed') setFairlaunchValidation('loading', 'IMD reports the workflow completed · waiting for the live launch and website outputs before declaring them live')
+  else setFairlaunchValidation('loading', `SWARM workflow ${clean(workflow.status || 'active')} · Personality.md is tracking contracts deployment frontend publishing and validation`)
+  return outputsLive
+}
+
+async function fetchFairlaunchWorkflow() {
+  if (!fairlaunchWorkflowId) throw new Error('No admitted SWARM workflow is active')
+  const response = await fetch(`/api/imd/workflows/${fairlaunchWorkflowId}`)
+  const workflow = await responseJson(response)
+  if (!response.ok) throw new Error(resultError(workflow, response))
+  renderFairlaunchWorkflow(workflow)
+  return workflow
+}
+
+async function pollFairlaunchWorkflow() {
+  if (fairlaunchWorkflowPolling) return
+  fairlaunchWorkflowPolling = true
+  try {
+    for (let attempt = 0; attempt < 12; attempt += 1) {
+      const workflow = await fetchFairlaunchWorkflow()
+      if (['blocked', 'failed', 'superseded'].includes(workflow.status) || hasLiveFairlaunchOutputs(workflow)) return workflow
+      await delay(10000)
+    }
+    setFairlaunchValidation('loading', 'SWARM is still building · use refresh workflow to keep tracking it inside Personality.md')
+    return null
+  } finally {
+    fairlaunchWorkflowPolling = false
+  }
+}
+
+function startFairlaunchWorkflow(admission) {
+  const workflowId = admission?.workflowId
+  if (!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(workflowId || '')) throw new Error('IMD admitted the order without a valid workflow id')
+  fairlaunchWorkflowId = workflowId
+  sessionStorage.setItem('personalityFairlaunchWorkflowId', workflowId)
+  fairlaunchProgress.hidden = false
+  $('#fairlaunchWorkflowId').textContent = shortAddress(workflowId).toUpperCase()
+  pollFairlaunchWorkflow().catch((error) => setFairlaunchValidation('error', error.message))
+}
+
+function applyFairlaunchPaymentStatus(result) {
+  fairlaunchPaymentState.textContent = paymentStatusLabel(result.status).replace('JOB', 'LAUNCH')
+  if (result.status === 'quoted') {
+    fairlaunchPaymentButton.hidden = false
+    fairlaunchRefreshButton.hidden = true
+    setFairlaunchValidation('success', 'Real unpaid SWARM quote restored · connect the paying wallet and review the payment')
+    return
+  }
+  if (result.status === 'admitted') {
+    const admission = result.admission?.result
+    const statusUrl = admission?.statusUrl
+    fairlaunchPaymentButton.hidden = true
+    fairlaunchRefreshButton.hidden = true
+    const safeStatusUrl = statusUrl ? safeExternalUrl(new URL(statusUrl, 'https://api.imd.fun').href) : null
+    fairlaunchJobLink.hidden = !safeStatusUrl
+    fairlaunchJobLink.href = safeStatusUrl || '#'
+    startFairlaunchWorkflow(admission)
+    setFairlaunchValidation('loading', `SWARM admitted fairlaunch ${admission?.jobId || fairlaunchCurrentOrder.id} · tracking contracts deployment frontend publishing and validation here`)
+    showToast('SWARM fairlaunch admitted')
+    return
+  }
+  if (result.status === 'payment_failed' || result.status === 'expired') {
+    fairlaunchPaymentButton.hidden = true
+    fairlaunchRefreshButton.hidden = false
+    if (result.status === 'expired') fairlaunchQuoteButton.disabled = false
+    setFairlaunchValidation('error', result.status === 'expired' ? 'The SWARM quote expired · run check and create a new quote' : 'IMD rejected or could not confirm the fairlaunch payment · refresh status before retrying')
+    return
+  }
+  fairlaunchPaymentButton.hidden = true
+  fairlaunchRefreshButton.hidden = false
+  setFairlaunchValidation('loading', `${paymentStatusLabel(result.status)} · IMD is confirming payment and admitting the fairlaunch workflow`)
+}
+
+async function pollFairlaunchPaymentStatus() {
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    await delay(2000)
+    const result = await fetchFairlaunchPaymentStatus()
+    if (['admitted', 'payment_failed', 'expired'].includes(result.status)) return result
+  }
+  fairlaunchRefreshButton.hidden = false
+  setFairlaunchValidation('loading', 'IMD is still processing the fairlaunch order · use refresh status to continue checking')
+  return null
+}
+
+async function payAndSubmitFairlaunch() {
+  const { quote } = fairlaunchQuoteTerms()
+  if (Math.floor(Date.now() / 1000) >= Number(quote.expiresAt) - 15) throw new Error('The SWARM quote is too close to expiry · create a new quote')
+  setFairlaunchPaymentButton('busy', 'REQUESTING IMD PAYMENT CHALLENGE', true)
+  setFairlaunchValidation('loading', 'Requesting the exact x402 fairlaunch payment terms from IMD')
+  const challengeResponse = await fetch(`/api/imd/orders/${fairlaunchCurrentOrder.id}/submit`, { method: 'POST', headers: fairlaunchPaidHeaders() })
+  const challenge = await responseJson(challengeResponse)
+  if (challengeResponse.status !== 402) throw new Error(resultError(challenge, challengeResponse))
+  const accepted = assertFairlaunchChallenge(challenge)
+  const { walletClient } = walletClients()
+  const signer = { address: connectedAddress, signTypedData: (typedData) => walletClient.signTypedData({ account: connectedAddress, ...typedData }) }
+  setFairlaunchPaymentButton('busy', 'SIGNING X402 PAYMENT', true)
+  setFairlaunchValidation('loading', 'Confirm the Permit2 payment signature in your wallet · no private key leaves the wallet')
+  const client = x402Client.fromConfig({ schemes: [{ network: accepted.network, client: new ExactEvmScheme(signer) }], spendControls: buildSpendControls(accepted) })
+  const generated = await client.createPaymentPayload({ x402Version: 2, resource: challenge.resource, accepts: [accepted] })
+  const { extensions: _extensions, ...withoutExtensions } = generated
+  const payment = JSON.parse(JSON.stringify({ ...withoutExtensions, accepted }))
+  const approval = buildQuoteApproval(challenge, payment)
+  setFairlaunchPaymentButton('busy', 'SIGNING FAIRLAUNCH APPROVAL', true)
+  setFairlaunchValidation('loading', 'Confirm the second signature binding this exact payment to this exact SWARM workflow')
+  const quoteSignature = await signer.signTypedData(approval)
+  const encodedPayment = encodePaymentSignatureHeader(payment)
+  setFairlaunchPaymentButton('busy', 'SUBMITTING FAIRLAUNCH TO IMD', true)
+  const submitResponse = await fetch(`/api/imd/orders/${fairlaunchCurrentOrder.id}/submit`, {
+    method: 'POST',
+    headers: fairlaunchPaidHeaders({ 'content-type': 'application/json', 'PAYMENT-SIGNATURE': encodedPayment }),
+    body: JSON.stringify({ quoteSignature }),
+  })
+  const result = await responseJson(submitResponse)
+  if (!submitResponse.ok && submitResponse.status !== 202) throw new Error(resultError(result, submitResponse))
+  applyFairlaunchPaymentStatus(result)
+  if (!['admitted', 'payment_failed', 'expired'].includes(result.status)) await pollFairlaunchPaymentStatus()
+}
+
+async function handleFairlaunchPaymentButton() {
+  if (fairlaunchPaymentBusy || !fairlaunchCurrentOrder) return
+  fairlaunchPaymentBusy = true
+  try {
+    if (fairlaunchPaymentMode === 'connect') {
+      await ensureWallet()
+      showToast('Wallet connected · no payment requested')
+      await refreshFairlaunchPaymentAction()
+    } else if (fairlaunchPaymentMode === 'check') await refreshFairlaunchPaymentAction()
+    else if (fairlaunchPaymentMode === 'approve') await approveFairlaunchPermit2()
+    else if (fairlaunchPaymentMode === 'pay') await payAndSubmitFairlaunch()
+  } catch (error) {
+    setFairlaunchValidation('error', error.message)
+    showToast(error.message, 'red')
+    if (fairlaunchCurrentOrder && !fairlaunchPaymentButton.hidden) setFairlaunchPaymentButton(connectedAddress ? 'check' : 'connect', connectedAddress ? 'CHECK FAIRLAUNCH PAYMENT READINESS' : 'CONNECT WALLET TO REVIEW FAIRLAUNCH')
+  } finally {
+    fairlaunchPaymentBusy = false
+  }
+}
+
+async function restoreFairlaunchOrder() {
+  const id = sessionStorage.getItem('personalityFairlaunchOrderId')
+  const quotedWallet = sessionStorage.getItem('personalityFairlaunchQuotedWallet')
+  if (!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(id || '') || !/^0x[0-9a-fA-F]{40}$/.test(quotedWallet || '')) return
+  try {
+    const response = await fetch(`/api/imd/orders/${id}`, { headers: fairlaunchPaidHeaders() })
+    const result = await responseJson(response)
+    if (!response.ok) throw new Error(resultError(result, response))
+    fairlaunchCurrentOrder = result.order
+    fairlaunchQuotedWallet = getAddress(quotedWallet)
+    fairlaunchPanel.hidden = false
+    renderFairlaunchPaymentPanel()
+    applyFairlaunchPaymentStatus(result)
+  } catch {
+    sessionStorage.removeItem('personalityFairlaunchOrderId')
+    sessionStorage.removeItem('personalityFairlaunchQuotedWallet')
   }
 }
 
@@ -677,6 +1135,16 @@ validateButton.addEventListener('click', validateRequest)
 quoteButton.addEventListener('click', createQuote)
 paymentButton.addEventListener('click', handlePaymentButton)
 refreshPaymentStatusButton.addEventListener('click', () => fetchPaymentStatus().catch((error) => setValidation('error', error.message)))
+fairlaunchCheckButton.addEventListener('click', checkFairlaunch)
+fairlaunchQuoteButton.addEventListener('click', createFairlaunchQuote)
+fairlaunchPaymentButton.addEventListener('click', handleFairlaunchPaymentButton)
+fairlaunchRefreshButton.addEventListener('click', () => fetchFairlaunchPaymentStatus().catch((error) => setFairlaunchValidation('error', error.message)))
+fairlaunchWorkflowRefresh.addEventListener('click', () => fetchFairlaunchWorkflow().catch((error) => setFairlaunchValidation('error', error.message)))
+fairlaunchForm.addEventListener('input', () => {
+  if (!fairlaunchCheckedPayload && !fairlaunchCurrentOrder) return
+  resetFairlaunchPayment()
+  setFairlaunchValidation('', 'Launch fields changed · run the free IMD check again before requesting a quote')
+})
 selectImdProviderButton.addEventListener('click', () => setProvider('imd'))
 selectHiggsfieldProviderButton.addEventListener('click', () => setProvider('higgsfield'))
 verifyHolderButton.addEventListener('click', verifyHolderAccess)
@@ -688,6 +1156,7 @@ connectButton.addEventListener('click', async () => {
     await ensureWallet()
     showToast('Wallet connected · no payment requested')
     if (currentOrder) await refreshPaymentAction()
+    if (fairlaunchCurrentOrder) await refreshFairlaunchPaymentAction()
   } catch (error) {
     showToast(error.message, 'red')
   }
@@ -703,6 +1172,7 @@ if (window.ethereum?.on) {
     generateInfluencerButton.disabled = true
     if (activeProvider === 'higgsfield') setHolderStatus('', 'Wallet changed · verify the 100K PMD holding again')
     if (currentOrder) refreshPaymentAction().catch((error) => setValidation('error', error.message))
+    if (fairlaunchCurrentOrder) refreshFairlaunchPaymentAction().catch((error) => setFairlaunchValidation('error', error.message))
   })
   window.ethereum.on('chainChanged', () => {
     higgsfieldSessionToken = null
@@ -711,11 +1181,22 @@ if (window.ethereum?.on) {
     generateInfluencerButton.disabled = true
     if (activeProvider === 'higgsfield') setHolderStatus('', 'Network changed · switch to Ethereum Mainnet and verify again')
     if (currentOrder && connectedAddress) setPaymentButton('connect', 'SWITCH TO ETHEREUM MAINNET')
+    if (fairlaunchCurrentOrder && connectedAddress) setFairlaunchPaymentButton('connect', 'SWITCH TO ETHEREUM MAINNET')
   })
 }
 
 const savedOrderId = sessionStorage.getItem('personalityImdOrderId')
+const savedFairlaunchOrderId = sessionStorage.getItem('personalityFairlaunchOrderId')
+const savedFairlaunchWorkflowId = sessionStorage.getItem('personalityFairlaunchWorkflowId')
 updatePreview()
 setProvider('higgsfield')
 if (savedOrderId) sessionStorage.setItem('personalityImdOrderId', savedOrderId)
+if (savedFairlaunchOrderId) sessionStorage.setItem('personalityFairlaunchOrderId', savedFairlaunchOrderId)
+if (savedFairlaunchWorkflowId && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(savedFairlaunchWorkflowId)) {
+  fairlaunchWorkflowId = savedFairlaunchWorkflowId
+  fairlaunchPanel.hidden = false
+  fairlaunchProgress.hidden = false
+  fetchFairlaunchWorkflow().catch(() => {})
+}
 restoreOrder()
+restoreFairlaunchOrder()

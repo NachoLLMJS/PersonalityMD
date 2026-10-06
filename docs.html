@@ -11,7 +11,7 @@
   <body class="docs-page">
     <header class="docs-header">
       <a class="docs-brand" href="/" aria-label="Personality.md home"><span>◇</span><b>PERSONALITY.MD</b></a>
-      <div class="docs-header-state"><i></i> DOCUMENTATION · VERIFIED 2026-10-05</div>
+      <div class="docs-header-state"><i></i> DOCUMENTATION · VERIFIED 2026-10-06</div>
       <div class="docs-header-actions">
         <a href="/" class="docs-header-link">HOME</a>
         <a href="/create.html" target="_blank" rel="noopener noreferrer" class="docs-create">CREATE</a>
@@ -105,7 +105,7 @@
                 <tr><td>Creator</td><td>Build a structured influencer and validate the objective</td><td>Implemented</td></tr>
                 <tr><td>Bridge</td><td>Protect cross origin IMD routes behind same origin requests</td><td>Local and Vercel production</td></tr>
                 <tr><td>Payment client</td><td>Handle x402 challenge Permit2 approval two wallet signatures paid submit and status polling</td><td>Implemented</td></tr>
-                <tr><td>Persistence</td><td>Recover the current IMD request token and active order within the browser session</td><td>Implemented</td></tr>
+                <tr><td>Persistence</td><td>Recover current IMD request tokens active orders and admitted workflow IDs within the browser session</td><td>Implemented</td></tr>
               </tbody>
             </table>
           </div>
@@ -156,16 +156,16 @@
           <div class="docs-section-body">
             <p class="docs-eyebrow">STANDALONE WORKSPACE</p>
             <h2>CREATOR STUDIO</h2>
-            <p>The Creator Studio lives at <code>/create.html</code> and opens independently from the homepage so a user can build a personality without losing the Explorer state</p>
+            <p>The Creator Studio lives at <code>/create.html</code> and contains two independent full workspaces HIGGSFIELD opens first and SWARM preserves the original IMD request builder</p>
             <div class="step-list">
-              <article><span>01</span><div><b>CORE IDENTITY</b><p>Display name niche audience purpose campaign direction and free form brief</p></div></article>
-              <article><span>02</span><div><b>APPEARANCE SYSTEM</b><p>Build hairstyle heritage age presentation and eye color</p></div></article>
-              <article><span>03</span><div><b>VOICE AND BEHAVIOR</b><p>Archetype tone language values forbidden topics and disclosure rules</p></div></article>
-              <article><span>04</span><div><b>FIRST PRODUCTION</b><p>Portrait plus video vertical video or image reference pack</p></div></article>
+              <article><span>01</span><div><b>HIGGSFIELD HOLDER GATE</b><p>Sign a challenge and verify at least 100000 PMD on Ethereum Mainnet without an approval or payment</p></div></article>
+              <article><span>02</span><div><b>IDENTITY + MOTION</b><p>Upload one supported identity image and one MP4 motion reference no longer than five seconds</p></div></article>
+              <article><span>03</span><div><b>GENJUTSU RESULT</b><p>Run Higgsfield Motion Transfer and display only the real identity reference and returned video URL</p></div></article>
+              <article><span>04</span><div><b>NATIVE SWARM FAIRLAUNCH</b><p>Configure check quote pay and track the IMD workflow without opening the external launcher</p></div></article>
             </div>
-            <h3>Live request console</h3>
-            <p>The right side console updates as the form changes and shows the selected visual identity niche heritage voice output and complete composed objective</p>
-            <p>Changing any field invalidates the earlier IMD validation and disables quote creation until the request is checked again</p>
+            <h3>Independent SWARM workspace</h3>
+            <p>The SWARM tab keeps the original identity appearance voice behavior and first production request builder with its live request console</p>
+            <p>Changing any launch or SWARM field invalidates its earlier IMD validation and disables quote creation until that request is checked again</p>
           </div>
         </section>
 
@@ -217,13 +217,16 @@
             <p class="docs-eyebrow">NETWORK LAYER</p>
             <h2>IMD INTEGRATION</h2>
             <p>IMD exposes a public control plane at <code>https://api.imd.fun</code> and an Explorer at <code>https://explorer.imd.fun</code></p>
-            <p>Personality.md currently uses public job reads plus request checking and quote creation</p>
+            <p>Personality.md uses public job reads request checking quote creation paid admission and read only workflow status polling</p>
             <table class="docs-table">
               <thead><tr><th>PERSONALITY ROUTE</th><th>IMD DESTINATION</th><th>USE</th></tr></thead>
               <tbody>
                 <tr><td>GET /api/imd/jobs</td><td>GET /jobs</td><td>Read real public work</td></tr>
                 <tr><td>POST /api/imd/check</td><td>POST /requests/check</td><td>Run free planning and blocker validation</td></tr>
                 <tr><td>POST /api/imd/quote</td><td>POST /requests/quote</td><td>Save a real priced unpaid order</td></tr>
+                <tr><td>GET /api/imd/orders/:id</td><td>GET /requests/:id</td><td>Recover a quote payment or admission state</td></tr>
+                <tr><td>POST /api/imd/orders/:id/submit</td><td>POST /requests/:id/submit</td><td>Request or submit the explicit x402 payment</td></tr>
+                <tr><td>GET /api/imd/workflows/:id</td><td>GET /workflows/:id</td><td>Track the admitted contracts deployment frontend publishing and validation workflow</td></tr>
               </tbody>
             </table>
             <h3>Media skills used by the request builder</h3>
@@ -284,13 +287,13 @@
         <section class="docs-section" id="uploads">
           <div class="docs-section-index">12</div>
           <div class="docs-section-body">
-            <p class="docs-eyebrow">NOT AVAILABLE</p>
-            <h2>IMAGE UPLOADS</h2>
-            <p>The Creator Studio does not expose a customer image upload control</p>
-            <p>The current public IMD customer request interface has no confirmed attachment route for sending reference image bytes with a paid job</p>
-            <p>Personality.md therefore does not accept preview describe or imply transmission of customer reference files through the IMD flow</p>
-            <p>The original built in Build Hairstyle and Heritage selectors remain available because their selected text values are included directly in the IMD production objective</p>
-            <div class="docs-callout warning"><b>NO SIMULATED UPLOAD</b><p>Image upload will remain absent until IMD publishes a supported customer attachment route that can be integrated and verified end to end</p></div>
+            <p class="docs-eyebrow">HIGGSFIELD REFERENCES</p>
+            <h2>IMAGE + MOTION UPLOADS</h2>
+            <p>The HIGGSFIELD workspace accepts one JPEG JPG PNG WEBP or GIF identity image up to 15 MB and one MP4 motion reference up to 50 MB and five seconds</p>
+            <p>The browser previews local files only after selection The server validates file type size and MP4 duration before issuing restricted direct upload tickets</p>
+            <p>The Higgsfield credential remains server side and is never returned to the browser committed to the repository or written into public Vite variables</p>
+            <p>The independent SWARM Creator still has no generic IMD attachment route Its original Build Hairstyle and Heritage selectors continue to send text values in the IMD objective</p>
+            <div class="docs-callout warning"><b>REAL OUTPUTS ONLY</b><p>The result cards remain hidden until Higgsfield returns a real HTTPS video URL and the fairlaunch remains locked until that result exists</p></div>
           </div>
         </section>
 
@@ -327,12 +330,13 @@
               <li>Sign and submit a real x402 payment</li>
               <li>Poll payment and admission state</li>
               <li>Map successful admission to the real job status URL</li>
+              <li>Track the native fairlaunch workflow through contracts deployment frontend publishing validation and completion</li>
+              <li>Display repository launch and IPFS website outputs only when returned by IMD</li>
             </ul>
             <h3>Future coverage required</h3>
             <ul>
-              <li>Poll the admitted job until the creative work completes</li>
-              <li>Read accepted files from the result endpoint</li>
-              <li>Display image video and report outputs</li>
+              <li>Render additional accepted files and reports from general SWARM jobs</li>
+              <li>Expose token and pool contract addresses when the workflow API returns them as structured fields</li>
               <li>Continue an existing personality project</li>
             </ul>
           </div>
@@ -502,9 +506,12 @@
                 <tr><td>src/main.js</td><td>Decorative terminal wallet connection and homepage interactions</td></tr>
                 <tr><td>src/explorer.js</td><td>Live IMD jobs reads filters refresh and safe rendering</td></tr>
                 <tr><td>src/personalities.js</td><td>Vertical video cards hover playback focus playback and reset</td></tr>
-                <tr><td>src/create.js</td><td>Standalone creator validation live quote wallet Permit2 x402 submit and admission polling</td></tr>
+                <tr><td>src/create.js</td><td>Higgsfield holder generation native fairlaunch validation quote wallet Permit2 x402 submit and workflow polling</td></tr>
+                <tr><td>src/imd-launch.js</td><td>Constrained Ethereum fairlaunch payload pool validation and full quoted input verification</td></tr>
                 <tr><td>src/imd-payment.js</td><td>Canonical payment hashing quote approval types amount formatting and status labels</td></tr>
                 <tr><td>server/imd-paid-routes.js</td><td>Fail closed paid route mapping token validation and IMD request construction</td></tr>
+                <tr><td>server/imd-fairlaunch.js</td><td>Server side workflow.open chain permission step pool and motion reference validation</td></tr>
+                <tr><td>server/higgsfield-handler.js</td><td>PMD gate signed capabilities upload tickets motion transfer and MP4 validation</td></tr>
                 <tr><td>src/styles.css</td><td>Landing Explorer responsive system and media cards</td></tr>
                 <tr><td>src/create.css</td><td>Black Creator Studio visual system</td></tr>
                 <tr><td>src/docs.css</td><td>Documentation layout navigation tables and mobile rules</td></tr>
@@ -524,9 +531,10 @@
             <p class="docs-eyebrow">HONEST BOUNDARIES</p>
             <h2>CURRENT LIMITATIONS</h2>
             <div class="limitation-list">
-              <article><b>NO CUSTOMER IMAGE UPLOAD TO IMD</b><p>The SWARM Creator does not show a file uploader because IMD has no confirmed public attachment route</p></article>
-              <article><b>NO PERSONALITY DATABASE</b><p>Refreshing the page resets the current form</p></article>
-              <article><b>NO RESULT DASHBOARD</b><p>The application connects admission to the job status URL but does not yet retrieve and render accepted media</p></article>
+              <article><b>HIGGSFIELD HOLDER ACCESS</b><p>Image and motion generation requires a signed wallet proof and at least 100000 PMD on Ethereum Mainnet</p></article>
+              <article><b>ETH FAIRLAUNCH PAIR ONLY</b><p>The native workflow currently exposes ETH because the complete IMD validation passed for that pairing</p></article>
+              <article><b>NO PERSONALITY DATABASE</b><p>Orders and active workflows recover within the browser session but no long term account database exists</p></article>
+              <article><b>STRUCTURED OUTPUT DEPENDENCY</b><p>Personality.md only declares token pool and website live when IMD reports a completed workflow live launch repository and website URL</p></article>
               <article><b>NO SOCIAL PUBLISHING</b><p>No account creation scheduling posting or platform credentials exist</p></article>
               <article><b>NO PERSISTENT MEMORY</b><p>The intended long term identity memory is not stored by the current frontend</p></article>
               <article><b>PRODUCTION API BRIDGE</b><p>Vercel Functions expose the restricted same-origin API handlers used by the deployed application</p></article>
@@ -544,19 +552,20 @@
             <details><summary>DOES VALIDATION COST MONEY</summary><p>No The current check route is used before quote creation and does not perform payment</p></details>
             <details><summary>DOES CREATE IMD QUOTE START A JOB</summary><p>No It saves a real unpaid order The user must then review the terms approve Permit2 when required sign the payment and sign the quote approval</p></details>
             <details><summary>WHEN DOES IMD CHARGE THE WALLET</summary><p>Only after the user presses the payment control and confirms the required wallet prompts Quote creation and validation do not charge</p></details>
-            <details><summary>CAN I UPLOAD REFERENCE IMAGES</summary><p>No The upload control was removed because IMD has no confirmed public customer attachment route</p></details>
-            <details><summary>WILL IMAGE UPLOAD RETURN LATER</summary><p>Only after IMD publishes a supported public customer attachment route that can be integrated and verified end to end</p></details>
+            <details><summary>CAN I UPLOAD REFERENCE IMAGES</summary><p>Yes in the HIGGSFIELD workspace after holder verification The independent SWARM request builder still has no generic IMD attachment route</p></details>
+            <details><summary>DOES HIGGSFIELD AUTOMATICALLY LAUNCH A TOKEN</summary><p>No Generation and fairlaunch are separate A real result unlocks the native SWARM form but CHECK quote payment and wallet confirmation remain explicit steps</p></details>
+            <details><summary>DOES CHECK COST MONEY</summary><p>No CHECK calls the live IMD planner without approval signature or payment</p></details>
             <details><summary>ARE THE SELECTOR IMAGES FROM HIGGSFIELD</summary><p>No All 21 selector images are original assets generated for Personality.md</p></details>
             <details><summary>CAN THE SITE PUBLISH TO SOCIAL NETWORKS</summary><p>No Social operation is part of the planned product model but is not implemented</p></details>
             <details><summary>DOES CONNECT SPEND FUNDS</summary><p>No CONNECT requests account access only Spending requires the later Permit2 approval and payment confirmations</p></details>
             <details><summary>WHY DOES THE TERMINAL SAY WRONG COMMAND</summary><p>The terminal is a decorative explanation surface Influencer creation belongs in the Creator Studio</p></details>
-            <details><summary>CAN THIS BE DEPLOYED AS A STATIC SITE</summary><p>The pages can be built statically but live IMD calls require a production backend replacing the development bridge</p></details>
+            <details><summary>CAN THIS BE DEPLOYED AS A STATIC SITE</summary><p>The pages build statically while Vercel Functions provide the restricted same origin Higgsfield and IMD production bridges</p></details>
           </div>
         </section>
 
         <footer class="docs-footer">
           <div><b>PERSONALITY.MD</b><span>INDEPENDENT VIRTUAL INFLUENCER APPLICATION LAYER</span></div>
-          <div><span>DOCS VERIFIED</span><b>2026-10-05</b></div>
+          <div><span>DOCS VERIFIED</span><b>2026-10-06</b></div>
         </footer>
       </main>
     </div>
