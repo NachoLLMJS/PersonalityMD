@@ -60,6 +60,9 @@ test('fairlaunch retries only ambiguous frontend or hosting checker blockers', (
   assert.equal(shouldRetryFairlaunchCheck([
     { detail: 'The request needs a user-facing website or application interface' },
   ]), true)
+  assert.equal(shouldRetryFairlaunchCheck([
+    { code: 'evaluation_unavailable', detail: 'Semantic evaluation must complete before automatic submission.' },
+  ]), true)
   assert.equal(shouldRetryFairlaunchCheck([{ detail: 'Token supply is missing' }]), false)
   assert.equal(shouldRetryFairlaunchCheck([]), false)
 })

@@ -26,8 +26,8 @@ export function fairlaunchPoolBps(value) {
 
 export function shouldRetryFairlaunchCheck(blockers) {
   if (!Array.isArray(blockers) || blockers.length === 0) return false
-  const ambiguousWebsite = /user-facing website|usable website|frontend was required|hosting was required/i
-  return blockers.every((blocker) => ambiguousWebsite.test(String(blocker?.detail || blocker?.code || blocker || '')))
+  const retryableAssessment = /user-facing website|usable website|frontend was required|hosting was required|evaluation_unavailable|semantic evaluation must complete/i
+  return blockers.every((blocker) => retryableAssessment.test(`${blocker?.code || ''} ${blocker?.detail || blocker || ''}`))
 }
 
 export function buildFairlaunchWorkflow({ name, symbol, description, pairWith = 'eth', poolPercent = 88, videoUrl }) {
