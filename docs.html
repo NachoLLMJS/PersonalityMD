@@ -11,7 +11,7 @@
   <body class="docs-page">
     <header class="docs-header">
       <a class="docs-brand" href="/" aria-label="Personality.md home"><span>◇</span><b>PERSONALITY.MD</b></a>
-      <div class="docs-header-state"><i></i> DOCUMENTATION · VERIFIED 2026-10-06</div>
+      <div class="docs-header-state"><i></i> DOCUMENTATION · VERIFIED 2026-10-07</div>
       <div class="docs-header-actions">
         <a href="/" class="docs-header-link">HOME</a>
         <a href="/create.html" target="_blank" rel="noopener noreferrer" class="docs-create">CREATE</a>
@@ -87,22 +87,35 @@
             <p class="docs-eyebrow">SYSTEM MAP</p>
             <h2>ARCHITECTURE</h2>
             <div class="architecture-flow">
-              <div><span>01</span><b>BROWSER UI</b><small>Landing Explorer Creator Docs</small></div>
+              <div><span>01</span><b>HIGGSFIELD INPUT</b><small>Holder proof identity image and motion reference</small></div>
               <i>→</i>
-              <div><span>02</span><b>OBJECTIVE COMPOSER</b><small>Structured fields become plain language</small></div>
+              <div><span>02</span><b>INFLUENCER OUTPUT</b><small>Real Genjutsu motion result returned by Higgsfield</small></div>
               <i>→</i>
-              <div><span>03</span><b>SAME ORIGIN BRIDGE</b><small>Local Vite middleware forwards allowed calls</small></div>
+              <div><span>03</span><b>TOKEN LAUNCH</b><small>User fields become a verified paid workflow.open request</small></div>
               <i>→</i>
-              <div><span>04</span><b>IMD CONTROL PLANE</b><small>Jobs check and quote endpoints</small></div>
+              <div><span>04</span><b>SWARM DELIVERY</b><small>Token pool contracts repository and IPFS website</small></div>
             </div>
             <div class="docs-callout"><b>PRODUCTION BRIDGE</b><p>The same-origin bridge runs through a Vercel Function in production and through Vite middleware in development Both environments reuse the same restricted request handler</p></div>
+            <h3>FROM INFLUENCER TO LIVE TOKEN</h3>
+            <p>The default Creator path joins two independent providers without hiding the boundary between them Higgsfield creates the chosen influencer motion and IMD SWARM creates the tokenized agent company only after the user explicitly continues</p>
+            <div class="step-list">
+              <article><span>01</span><div><b>PROVE HOLDER ACCESS</b><p>The user connects an Ethereum wallet signs a read-only challenge and proves the configured PMD minimum No payment approval is requested</p></div></article>
+              <article><span>02</span><div><b>CREATE THE CHOSEN INFLUENCER</b><p>The user supplies an identity image and a motion reference Higgsfield Genjutsu returns the real public HTTPS motion result used as the agent identity on the future website</p></div></article>
+              <article><span>03</span><div><b>CONFIGURE A USER-CHOSEN TOKEN</b><p>The user chooses the agent and token name symbol company description and a whole-number pool share from 10% through 90% The current complete workflow pairs with ETH on Ethereum Mainnet</p></div></article>
+              <article><span>04</span><div><b>CHECK BEFORE PAYMENT</b><p>Personality.md builds the exact workflow.open request and asks the live IMD planner to verify contracts review deployment frontend IPFS hosting and launch requirements CHECK remains free</p></div></article>
+              <article><span>05</span><div><b>QUOTE PAY AND ADMIT</b><p>The user reviews the live quote network asset recipient amount and expiry then explicitly confirms any Permit2 approval the x402 payment signature and the EIP-712 QuoteApproval</p></div></article>
+              <article><span>06</span><div><b>BUILD AND VERIFY DELIVERY</b><p>SWARM executes the contracts deployment frontend review and publishing chain Personality.md polls the admitted workflow and only reports TOKEN + POOL + WEBSITE LIVE when a live launch repository and public website are returned</p></div></article>
+            </div>
+            <div class="docs-callout warning"><b>STANDARD TOKEN PROFILE</b><p>The generated request asks for a fixed supply of 1,000,000,000 tokens with 18 decimals minted once at deployment and no owner mint pause upgrade or transfer tax The launch is not automatic and no token exists until the paid SWARM workflow is admitted and completes</p></div>
             <table class="docs-table">
               <thead><tr><th>LAYER</th><th>RESPONSIBILITY</th><th>CURRENT STATE</th></tr></thead>
               <tbody>
                 <tr><td>Landing</td><td>Product explanation agent roles and operating loop</td><td>Implemented</td></tr>
                 <tr><td>Explorer</td><td>Standalone page for real IMD jobs and network filters</td><td>Implemented</td></tr>
                 <tr><td>Personalities</td><td>Standalone index of generated vertical media examples</td><td>Implemented</td></tr>
-                <tr><td>Creator</td><td>Build a structured influencer and validate the objective</td><td>Implemented</td></tr>
+                <tr><td>Higgsfield Creator</td><td>Verify PMD access upload references run Genjutsu and return a real motion identity</td><td>Implemented</td></tr>
+                <tr><td>Native fairlaunch</td><td>Configure the influencer token check quote pay admit and track the complete SWARM workflow</td><td>Implemented</td></tr>
+                <tr><td>SWARM Creator</td><td>Build a separate structured influencer media request and validate its objective</td><td>Implemented</td></tr>
                 <tr><td>Bridge</td><td>Protect cross origin IMD routes behind same origin requests</td><td>Local and Vercel production</td></tr>
                 <tr><td>Payment client</td><td>Handle x402 challenge Permit2 approval two wallet signatures paid submit and status polling</td><td>Implemented</td></tr>
                 <tr><td>Persistence</td><td>Recover current IMD request tokens active orders and admitted workflow IDs within the browser session</td><td>Implemented</td></tr>
@@ -166,6 +179,9 @@
             <h3>Independent SWARM workspace</h3>
             <p>The SWARM tab keeps the original identity appearance voice behavior and first production request builder with its live request console</p>
             <p>Changing any launch or SWARM field invalidates its earlier IMD validation and disables quote creation until that request is checked again</p>
+            <h3>Token creation belongs to the generated influencer</h3>
+            <p>After Higgsfield returns a real result the same workspace reveals the native fairlaunch form The user can name the influencer and token choose the symbol describe the agent company select the pool share and use the generated motion identity in the public token website</p>
+            <p>Higgsfield generation never creates a token by itself and the independent SWARM Creator tab is not the token launch form Token creation begins only inside the unlocked fairlaunch panel and continues through live IMD check quote payment admission and workflow tracking</p>
           </div>
         </section>
 
@@ -457,6 +473,16 @@
             <p>Reads the private saved order using the same client token and returns quoted payment pending admission pending admitted payment failed or expired state</p>
             <h3>GET /api/imd/capabilities</h3>
             <p>Reads enabled actions live prices network asset recipient limits and payment protocol configuration from IMD</p>
+            <h3>Higgsfield server bridge</h3>
+            <ul>
+              <li><code>GET /api/higgsfield/config</code> returns public provider holder threshold chain and model configuration without exposing credentials</li>
+              <li><code>POST /api/higgsfield/challenge</code> creates the short-lived read-only wallet ownership message</li>
+              <li><code>POST /api/higgsfield/verify</code> verifies the signature and live PMD balance on Ethereum Mainnet</li>
+              <li><code>POST /api/higgsfield/upload-ticket</code> validates file metadata and issues a restricted direct upload ticket</li>
+              <li><code>POST /api/higgsfield/generate-motion</code> verifies both upload receipts validates the MP4 duration and starts Genjutsu Motion Transfer</li>
+              <li><code>GET /api/higgsfield/status</code> reads the authorized generation job until a real provider result is available</li>
+            </ul>
+            <p>The Higgsfield credential remains server side Every challenge session upload receipt and job lookup is short lived and bound to the verified wallet</p>
             <h3>Bridge failure behavior</h3>
             <ul>
               <li>Unknown bridge routes return 404</li>
@@ -565,7 +591,7 @@
 
         <footer class="docs-footer">
           <div><b>PERSONALITY.MD</b><span>INDEPENDENT VIRTUAL INFLUENCER APPLICATION LAYER</span></div>
-          <div><span>DOCS VERIFIED</span><b>2026-10-06</b></div>
+          <div><span>DOCS VERIFIED</span><b>2026-10-07</b></div>
         </footer>
       </main>
     </div>
